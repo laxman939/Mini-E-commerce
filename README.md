@@ -126,6 +126,13 @@ Performance → Debounced search, infinite scroll, and memoized components.
 Scalability → Redux Toolkit for predictable state management.
 
 
+## 🔗 Demo & Repository
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?style=for-the-badge&logo=vercel)](https://mini-e-commerce-fe.vercel.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-black?style=for-the-badge&logo=github)](https://github.com/laxman939/Mini-E-commerce)
+
+
+
 👨‍💻 Author
 
 Laxman Aavuladoddi
