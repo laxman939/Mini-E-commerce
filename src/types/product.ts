@@ -9,6 +9,7 @@ export interface Product {
   price: number;
   originalPrice?: number;
   image: string;
+  images: string[];
   category: string;
   rating: number;
   reviewCount: number;
@@ -23,6 +24,9 @@ export interface Product {
     value: string;
   };
   stock?: number;
+  reviews: { reviewerName: string; comment: string; rating: number; date: string }[];
+  availabilityStatus: string;
+  discountPercentage: number;
 }
 
 // src/types/cart.ts

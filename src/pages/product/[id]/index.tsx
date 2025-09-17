@@ -9,90 +9,17 @@ import Link from 'next/link';
 import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/hooks/useWishList';
 import { Product } from '@/types/product';
+import { Header } from '@/components/layout/Header';
 
-export interface ProductVariant {
-  name: string
-  options: string[]
-}
-
-export interface LargeProduct {
-  id: number ;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  category: string;
-  rating: number;
-  reviewCount: number;
-  inStock: boolean;
-  description: string;
-  brand: string;
-  variants?: ProductVariant[];
-  thumbnail?: string;
-  // title: string;
-  selectedVariant?:{
-    name: string;
-    value: string;
-  };
-}
-
-// Mock product data
-const mockProducts: { [key: string]: Product } = {
-  '1': {
-    id: 1,
-    name: 'Wireless Bluetooth Headphones',
-    price: 79.99,
-    originalPrice: 99.99,
-    image: '/images/products/headphones.jpg',
-    category: 'Electronics',
-    rating: 4.5,
-    reviewCount: 128,
-    inStock: true,
-    description: 'Experience premium sound quality with our advanced wireless Bluetooth headphones. Featuring active noise cancellation technology, these headphones deliver crystal-clear audio while blocking out unwanted background noise. With a battery life of up to 30 hours and quick-charge capability, you can enjoy uninterrupted listening throughout your day.',
-    brand: 'TechBrand',
-    thumbnail: '/images/products/headphones_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'Black'
-    },
-    title: 'Wireless Bluetooth Headphones',
-    variants: [
-      { name: 'Color', options: ['Black', 'White', 'Blue'] },
-      { name: 'Size', options: ['Standard', 'Large'] }
-    ]
-  },
-  '2': {
-    id: 2,
-    name: 'Smart Fitness Watch',
-    price: 199.99,
-    originalPrice: 249.99,
-    image: '/images/products/smartwatch.jpg',
-    category: 'Electronics',
-    rating: 4.8,
-    reviewCount: 256,
-    inStock: true,
-    description: 'Track your fitness goals with precision using our advanced smart fitness watch. Monitor your heart rate, track workouts, and receive notifications right on your wrist. With built-in GPS and water resistance up to 50 meters, this watch is perfect for any activity.',
-    brand: 'FitTech',
-    thumbnail: '/images/products/smartwatch_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'Black'
-    },
-    title: 'Smart Fitness Watch',
-    variants: [
-      { name: 'Color', options: ['Black', 'Silver', 'Rose Gold'] },
-      { name: 'Band', options: ['Sport', 'Leather', 'Metal'] }
-    ]
-  }
-};
 
 export default function ProductDetailPage() {
   const params = useParams();
-  const productId = params.id as string;
+  console.log("products in product detail",params);
+  const productId = params?.id as string;
   
   const [product, setProduct] = useState<Product| null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: string }>({});
+  // const [selectedVariants, setSelectedVariants] = useState<{ [key: string]: string }>({});
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
 
@@ -101,21 +28,23 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     const loadProduct = async () => {
-      setLoading(true);
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const productData = mockProducts[productId];
-      if (productData) {
-        setProduct(productData);
-        // Initialize selected variants
-        const initialVariants: { [key: string]: string } = {};
-        productData.variants?.forEach(variant => {
-          initialVariants[variant.name] = variant.options[0];
-        });
-        setSelectedVariants(initialVariants);
+      try{
+        setLoading(true);
+
+        fetch(`https://dummyjson.com/products/${productId}`).then(res => res.json()).then(data => {
+        console.log(data, "data", "data");
+           if (data) {
+        setProduct(data)
       }
-      setLoading(false);
+    })
+      }catch(err){
+        console.log(err);
+      }finally{
+        setLoading(false);
+      }
+      
+      // Simulate API call
+      // await new Promise(resolve => setTimeout(resolve, 500));
     };
 
     if (productId) {
@@ -123,18 +52,18 @@ export default function ProductDetailPage() {
     }
   }, [productId]);
 
-  const handleVariantChange = (variantName: string, value: string) => {
-    setSelectedVariants(prev => ({
-      ...prev,
-      [variantName]: value
-    }));
-  };
+  // const handleVariantChange = (variantName: string, value: string) => {
+  //   setSelectedVariants(prev => ({
+  //     ...prev,
+  //     [variantName]: value
+  //   }));
+  // };
 
   const handleAddToCart = () => {
     if (product) {
-      const selectedVariant = Object.keys(selectedVariants).length > 0 
-        ? { name: Object.keys(selectedVariants)[0], value: Object.values(selectedVariants)[0] }
-        : undefined;
+      // const selectedVariant = Object.keys(selectedVariants).length > 0 
+      //   ? { name: Object.keys(selectedVariants)[0], value: Object.values(selectedVariants)[0] }
+      //   : undefined;
       
       addItem(product, quantity);
     }
@@ -191,14 +120,9 @@ export default function ProductDetailPage() {
     );
   }
 
-  // Mock additional images
-  const productImages = [
-    product.image,
-    product.image, // Duplicate for demo
-    product.image
-  ];
-
   return (
+    <>
+    <Header/>
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
@@ -236,7 +160,7 @@ export default function ProductDetailPage() {
             {/* Main Image */}
             <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
               <Image
-                src={productImages[activeImage] || ""}
+                src={product.images[activeImage || 0] || ""}
                 alt={product.name || "Product Image"}
                 width={600}
                 height={600}
@@ -250,7 +174,7 @@ export default function ProductDetailPage() {
 
             {/* Thumbnail Images */}
             <div className="flex space-x-4">
-              {productImages.map((image, index) => (
+              {product.images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setActiveImage(index)}
@@ -288,18 +212,18 @@ export default function ProductDetailPage() {
                 </span>
               </div>
               <span className="text-sm text-gray-500">
-                ({product.reviewCount} reviews)
+                ({product.reviews.length} reviews)
               </span>
             </div>
 
             {/* Price */}
             <div className="flex items-center space-x-4">
               <span className="text-3xl font-bold text-gray-900">
-                ${product.price}
+                ₹{product.price}<span className='text-sm text-gray-500'>({product.discountPercentage}%)</span>
               </span>
-              {product.originalPrice && product.originalPrice > (product.price ||  0) && (
+              { (product.price ||  0) && (
                 <span className="text-xl text-gray-500 line-through">
-                  ${product.originalPrice}
+                ₹{ (product.price / (1 - product.discountPercentage / 100)).toFixed(2) }
                 </span>
               )}
             </div>
@@ -311,7 +235,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Variants */}
-            {product.variants && product.variants.map((variant) => (
+            {/* {product.variants && product.variants.map((variant) => (
               <div key={variant.name}>
                 <label className="block text-sm font-medium text-gray-900 mb-2">
                   {variant.name}
@@ -332,7 +256,7 @@ export default function ProductDetailPage() {
                   ))}
                 </div>
               </div>
-            ))}
+            ))} */}
 
             {/* Quantity */}
             <div>
@@ -364,9 +288,9 @@ export default function ProductDetailPage() {
 
             {/* Stock Status */}
             <div className="flex items-center space-x-2">
-              <div className={`w-3 h-3 rounded-full ${product.inStock ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className={`text-sm font-medium ${product.inStock ? 'text-green-600' : 'text-red-600'}`}>
-                {product.inStock ? 'In Stock' : 'Out of Stock'}
+              <div className={`w-3 h-3 rounded-full ${product.availabilityStatus === "In Stock" ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className={`text-sm font-medium ${product.availabilityStatus === "In Stock" ? 'text-green-600' : 'text-red-600'}`}>
+                {product.availabilityStatus}
               </span>
             </div>
 
@@ -374,10 +298,10 @@ export default function ProductDetailPage() {
             <div className="space-y-4">
               <button
                 onClick={handleAddToCart}
-                disabled={!product.inStock}
+                disabled={!(product.availabilityStatus === "In Stock")}
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                Add to Cart - ${(product.price || 0 * quantity).toFixed(2)}
+                Add to Cart :   <span className='ps-2'>₹{(product.price  * quantity).toFixed(2)}</span>
               </button>
               
               <button
@@ -399,7 +323,7 @@ export default function ProductDetailPage() {
                   <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm text-gray-600">Free shipping on orders over $50</span>
+                  <span className="text-sm text-gray-600">Free shipping on orders over ₹500</span>
                 </div>
                 <div className="flex items-center space-x-3">
                   <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -419,5 +343,6 @@ export default function ProductDetailPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

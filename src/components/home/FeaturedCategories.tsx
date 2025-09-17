@@ -3,52 +3,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/types/product';
 
-interface Category {
-  id: string;
-  name: string;
-  image: string;
-  productCount: number;
-}
-
-const categories: Category[] = [
-  {
-    id: '1',
-    name: 'Electronics',
-    image: '/images/categories/electronics.jpg',
-    productCount: 245
-  },
-  {
-    id: '2',
-    name: 'Fashion',
-    image: '/images/categories/fashion.jpg',
-    productCount: 189
-  },
-  {
-    id: '3',
-    name: 'Home & Garden',
-    image: '/images/categories/home-garden.jpg',
-    productCount: 156
-  },
-  {
-    id: '4',
-    name: 'Sports',
-    image: '/images/categories/sports.jpg',
-    productCount: 98
-  },
-  {
-    id: '5',
-    name: 'Books',
-    image: '/images/categories/books.jpg',
-    productCount: 312
-  },
-  {
-    id: '6',
-    name: 'Beauty',
-    image: '/images/categories/beauty.jpg',
-    productCount: 87
-  }
-];
-
 interface TrendingProductsProps {
   products: Product[];
 }
@@ -88,11 +42,11 @@ export const FeaturedCategories: React.FC<TrendingProductsProps> = ({products}) 
                   />
                 </div>
                 <div className="p-4 text-center">
-                  <h3 className="font-semibold text-gray-900 mb-1">
+                  <h3 className="font-semibold text-gray-900 mb-1 first-letter:uppercase">
                     {category.category}
                   </h3>
                   <p className="text-sm text-gray-600">
-                    {category?.stock || 0} products
+                    {category?.stock || 0} Products
                   </p>
                 </div>
               </div>

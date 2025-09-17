@@ -2,109 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { useCart } from '../../hooks/useCart';
 import { useWishlist } from '@/hooks/useWishList';
 import { Product } from '@/types/product';
-
-// interface Product {
-//    id: string,
-//     name: string,
-//     price: number,
-//     originalPrice: number,
-//     image: string,
-//     category: string,
-//     rating: number,
-//     reviewCount: number,
-//     inStock: boolean,
-//     description: string,
-//     brand: string,
-//     variants: []
-// }
-
-// Mock trending products data
-const mockTrendingProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Wireless Bluetooth Headphones',
-    price: 79.99,
-    originalPrice: 99.99,
-    image: '/images/products/headphones.jpg',
-    thumbnail: '/images/products/headphones_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'Black'
-    },
-    title: 'Wireless Bluetooth Headphones',
-    category: 'Electronics',
-    rating: 4.5,
-    reviewCount: 128,
-    inStock: true,
-    description: 'High-quality wireless headphones with noise cancellation',
-    brand: 'TechBrand',
-    variants: []
-  },
-  {
-    id: 2,
-    name: 'Smart Fitness Watch',
-    price: 199.99,
-    originalPrice: 249.99,
-    image: '/images/products/smartwatch.jpg',
-    thumbnail: '/images/products/smartwatch_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'Black'
-    },  
-    title: 'Smart Fitness Watch',
-    category: 'Electronics',
-    rating: 4.8,
-    reviewCount: 256,
-    inStock: true,
-    description: 'Advanced fitness tracking with heart rate monitor',
-    brand: 'FitTech',
-    variants: []
-  },
-  {
-    id: 3,
-    name: 'Organic Cotton T-Shirt',
-    price: 29.99,
-    originalPrice: 39.99,
-    image: '/images/products/tshirt.jpg',
-    thumbnail: '/images/products/tshirt_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'White'
-    },
-    title: 'Organic Cotton T-Shirt',
-    category: 'Fashion',
-    rating: 4.3,
-    reviewCount: 89,
-    inStock: true,
-    description: 'Comfortable organic cotton t-shirt in various colors',
-    brand: 'EcoWear',
-    variants: []
-  },
-  {
-    id: 4,
-    name: 'Stainless Steel Water Bottle',
-    price: 24.99,
-    originalPrice: 34.99,
-    image: '/images/products/water-bottle.jpg',
-    thumbnail: '/images/products/water-bottle_thumb.jpg',
-    selectedVariant: {
-      name: 'Size',
-      value: '16oz'
-    },
-    title: 'Stainless Steel Water Bottle',
-    category: 'Sports',
-    rating: 4.7,
-    reviewCount: 145,
-    inStock: true,
-    description: 'Insulated water bottle keeps drinks cold for 24 hours',
-    brand: 'HydroLife',
-    variants: []
-  }
-];
+import ProductImageCarousel from '../product/ProductImageCarousel';
 
 interface TrendingProductsProps {
   products: Product[];
@@ -115,7 +17,7 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
   // const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
-  const { addItem: addToWishlist, isInWishlist } = useWishlist();
+  const { addItem: addToWishlist, isInWishlist,removeItem } = useWishlist();
 
   useEffect(() => {
     console.log(
@@ -136,10 +38,6 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
 
   const handleAddToCart = (product: Product) => {
     addItem(product, 1);
-  };
-
-  const handleAddToWishlist = (product: Product) => {
-    addToWishlist(product);
   };
 
   const renderStars = (rating: number) => {
@@ -196,16 +94,16 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product : Product) => (
-            console.log(product, "product"),
+            console.log(product, "product",product.images.length),
             <div
               key={product.id}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
             >
               <div className="relative">
                 <Link href={`/product/${product.id}`}>
-                  <div className="relative h-48 bg-gray-200">
+                  {/* <div className="relative h-48 bg-gray-200">
                     <Image
-                      src={product.thumbnail}
+                      src={product.images[0] || product.thumbnail }
                       alt={product.title}
                       fill
                       className="object-contain hover:scale-105 transition-transform duration-300"
@@ -214,12 +112,13 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
                       //   target.src = `https://via.placeholder.com/300x192/f3f4f6/6b7280?text=${product.name}`;
                       // }}
                     />
-                  </div>
+                  </div> */}
+                  <ProductImageCarousel product={product} />
                 </Link>
                 
                 {/* Wishlist button */}
                 <button
-                  onClick={() => handleAddToWishlist(product)}
+                  onClick={() => isInWishlist((product.id).toString()) ? removeItem((product.id).toString()) : addToWishlist(product)}
                   className={`absolute top-2 right-2 p-2 rounded-full ${
                     isInWishlist((product.id).toString())
                       ? 'bg-red-500 text-white'
@@ -232,17 +131,23 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
                 </button>
 
                 {/* Sale badge */}
-                {product.originalPrice && product.originalPrice > product.price && (
+                {/* {product.availabilityStatus === 'In Stock' ? ( */}
                   <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 text-xs font-semibold rounded">
-                    SALE
+                    {/* SALE */}
+                    {product.availabilityStatus === 'In Stock'  ? "SALE" : product.availabilityStatus}
                   </div>
-                )}
+              {/* //   )
+              //   :
+              //   <div className="absolute top-2 left-2 bg-gray-500 text-white px-2 py-1 text-xs font-semibold rounded">
+              //     {product.availabilityStatus}
+              //   </div>
+              // } */}
               </div>
 
               <div className="p-4">
                 <Link href={`/product/${product.id}`}>
                   <h3 className="font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors">
-                    {product.name}
+                    {product.title}
                   </h3>
                 </Link>
 
@@ -252,7 +157,7 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
                     {renderStars(product.rating)}
                   </div>
                   <span className="ml-1 text-sm text-gray-600">
-                    ({product.reviewCount})
+                    ({product.reviews.length})
                   </span>
                 </div>
 
@@ -260,11 +165,11 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-bold text-gray-900">
-                      ${product.price}
+                      ₹{product.price}<span className='text-sm text-gray-500'>({product.discountPercentage}%)</span>
                     </span>
-                    {product.originalPrice && product.originalPrice > product.price && (
+                    { product.price && (
                       <span className="text-sm text-gray-500 line-through">
-                        ${product.originalPrice}
+                       ₹{ (product.price / (1 - product.discountPercentage / 100)).toFixed(2) }
                       </span>
                     )}
                   </div>

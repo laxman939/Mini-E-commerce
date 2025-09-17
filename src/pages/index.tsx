@@ -29,7 +29,7 @@ export async function getServerSideProps() {
       uniqueData.push(item);
     }
   }
-  console.log(uniqueData, "uniqueData");
+  // console.log(uniqueData, "uniqueData");
 
   return {
     props: {

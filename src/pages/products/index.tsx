@@ -8,150 +8,148 @@ import { setProducts, setLoading } from '@/store/slices/productsSlice';
 import { setCategory, setSearchQuery, setSortBy } from '@/store/slices/filtersSlice';
 import { ProductFilters } from '@/components/product/ProductFilters';
 import { useDebounce } from '@/hooks/useDebounce';
-// import { Product } from '@/components/product/ProductGrid';
-// import { LargeProduct } from '../product/[id]';
 import { ProductCard } from '@/components/product/ProductCard';
 import { Product } from '@/types/product';
 
 // Mock products data
-const mockProducts: Product[] = [
-  {
-    id: 1,
-    name: 'Wireless Bluetooth Headphones',
-    price: 79.99,
-    originalPrice: 99.99,
-    image: '/images/products/headphones.jpg',
-    category: 'Electronics',
-    rating: 4.5,
-    reviewCount: 128,
-    inStock: true,
-    title: 'Wireless Bluetooth Headphones',
-    thumbnail: '/images/products/headphones_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'Black'
-    },
-    description: 'High-quality wireless headphones with active noise cancellation and 30-hour battery life.',
-    brand: 'TechBrand',
-    variants: [
-      { name: 'Color', options: ['Black', 'White', 'Blue'] },
-      { name: 'Size', options: ['Standard', 'Large'] }
-    ]
-  },
-  {
-    id:2,
-    name: 'Smart Fitness Watch',
-    price: 199.99,
-    originalPrice: 249.99,
-    image: '/images/products/smartwatch.jpg',
-    category: 'Electronics',
-    rating: 4.8,
-    reviewCount: 256,
-    inStock: true,
-    description: 'Advanced fitness tracking with heart rate monitor, GPS, and 7-day battery life.',
-    brand: 'FitTech',
-    thumbnail: '/images/products/smartwatch_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'Black'
-    },
-    title: 'Smart Fitness Watch',
-    variants: [
-      { name: 'Color', options: ['Black', 'Silver', 'Rose Gold'] },
-      { name: 'Band', options: ['Sport', 'Leather', 'Metal'] }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Organic Cotton T-Shirt',
-    price: 29.99,
-    originalPrice: 39.99,
-    image: '/images/products/tshirt.jpg',
-    category: 'Fashion',
-    rating: 4.3,
-    reviewCount: 89,
-    inStock: true,
-    description: 'Comfortable organic cotton t-shirt with relaxed fit and sustainable materials.',
-    brand: 'EcoWear',
-    thumbnail: '/images/products/tshirt_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'White'
-    },
-    title: 'Organic Cotton T-Shirt',
-    variants: [
-      { name: 'Color', options: ['White', 'Black', 'Navy', 'Gray'] },
-      { name: 'Size', options: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] }
-    ]
-  },
-  {
-    id: 4,
-    name: 'Stainless Steel Water Bottle',
-    price: 24.99,
-    originalPrice: 34.99,
-    image: '/images/products/water-bottle.jpg',
-    category: 'Sports',
-    rating: 4.7,
-    reviewCount: 145,
-    inStock: true,
-    description: 'Insulated water bottle keeps drinks cold for 24 hours and hot for 12 hours.',
-    brand: 'HydroLife',
-    thumbnail: '/images/products/water-bottle_thumb.jpg',
-    selectedVariant: {
-      name: 'Size',
-      value: '16oz'
-    },
-    title: 'Stainless Steel Water Bottle',
-    variants: [
-      { name: 'Size', options: ['16oz', '20oz', '32oz'] },
-      { name: 'Color', options: ['Stainless', 'Black', 'Blue', 'Pink'] }
-    ]
-  },
-  {
-    id: 5,
-    name: 'Yoga Mat Premium',
-    price: 49.99,
-    originalPrice: 69.99,
-    image: '/images/products/yoga-mat.jpg',
-    category: 'Sports',
-    rating: 4.6,
-    reviewCount: 203,
-    inStock: true,
-    description: 'Non-slip premium yoga mat with extra cushioning and alignment guides.',
-    brand: 'ZenFit',
-    thumbnail: '/images/products/yoga-mat_thumb.jpg',
-    selectedVariant: {
-      name: 'Thickness',
-      value: '4mm'
-    },    
-    title: 'Yoga Mat Premium',
-    variants: [
-      { name: 'Thickness', options: ['4mm', '6mm', '8mm'] },
-      { name: 'Color', options: ['Purple', 'Blue', 'Green', 'Pink'] }
-    ]
-  },
-  {
-    id: 6,
-    name: 'LED Desk Lamp',
-    price: 34.99,
-    image: '/images/products/desk-lamp.jpg',
-    category: 'Home & Garden',
-    rating: 4.4,
-    reviewCount: 167,
-    inStock: false,
-    description: 'Adjustable LED desk lamp with touch controls and USB charging port.',
-    brand: 'BrightLight',
-    thumbnail: '/images/products/desk-lamp_thumb.jpg',
-    selectedVariant: {
-      name: 'Color',
-      value: 'White'
-    },    
-    title: 'LED Desk Lamp',
-    variants: [
-      { name: 'Color', options: ['White', 'Black', 'Silver'] }
-    ]
-  }
-];
+// const mockProducts: Product[] = [
+//   {
+//     id: 1,
+//     name: 'Wireless Bluetooth Headphones',
+//     price: 79.99,
+//     originalPrice: 99.99,
+//     image: '/images/products/headphones.jpg',
+//     category: 'Electronics',
+//     rating: 4.5,
+//     reviewCount: 128,
+//     inStock: true,
+//     title: 'Wireless Bluetooth Headphones',
+//     thumbnail: '/images/products/headphones_thumb.jpg',
+//     selectedVariant: {
+//       name: 'Color',
+//       value: 'Black'
+//     },
+//     description: 'High-quality wireless headphones with active noise cancellation and 30-hour battery life.',
+//     brand: 'TechBrand',
+//     variants: [
+//       { name: 'Color', options: ['Black', 'White', 'Blue'] },
+//       { name: 'Size', options: ['Standard', 'Large'] }
+//     ]
+//   },
+//   {
+//     id:2,
+//     name: 'Smart Fitness Watch',
+//     price: 199.99,
+//     originalPrice: 249.99,
+//     image: '/images/products/smartwatch.jpg',
+//     category: 'Electronics',
+//     rating: 4.8,
+//     reviewCount: 256,
+//     inStock: true,
+//     description: 'Advanced fitness tracking with heart rate monitor, GPS, and 7-day battery life.',
+//     brand: 'FitTech',
+//     thumbnail: '/images/products/smartwatch_thumb.jpg',
+//     selectedVariant: {
+//       name: 'Color',
+//       value: 'Black'
+//     },
+//     title: 'Smart Fitness Watch',
+//     variants: [
+//       { name: 'Color', options: ['Black', 'Silver', 'Rose Gold'] },
+//       { name: 'Band', options: ['Sport', 'Leather', 'Metal'] }
+//     ]
+//   },
+//   {
+//     id: 3,
+//     name: 'Organic Cotton T-Shirt',
+//     price: 29.99,
+//     originalPrice: 39.99,
+//     image: '/images/products/tshirt.jpg',
+//     category: 'Fashion',
+//     rating: 4.3,
+//     reviewCount: 89,
+//     inStock: true,
+//     description: 'Comfortable organic cotton t-shirt with relaxed fit and sustainable materials.',
+//     brand: 'EcoWear',
+//     thumbnail: '/images/products/tshirt_thumb.jpg',
+//     selectedVariant: {
+//       name: 'Color',
+//       value: 'White'
+//     },
+//     title: 'Organic Cotton T-Shirt',
+//     variants: [
+//       { name: 'Color', options: ['White', 'Black', 'Navy', 'Gray'] },
+//       { name: 'Size', options: ['XS', 'S', 'M', 'L', 'XL', 'XXL'] }
+//     ]
+//   },
+//   {
+//     id: 4,
+//     name: 'Stainless Steel Water Bottle',
+//     price: 24.99,
+//     originalPrice: 34.99,
+//     image: '/images/products/water-bottle.jpg',
+//     category: 'Sports',
+//     rating: 4.7,
+//     reviewCount: 145,
+//     inStock: true,
+//     description: 'Insulated water bottle keeps drinks cold for 24 hours and hot for 12 hours.',
+//     brand: 'HydroLife',
+//     thumbnail: '/images/products/water-bottle_thumb.jpg',
+//     selectedVariant: {
+//       name: 'Size',
+//       value: '16oz'
+//     },
+//     title: 'Stainless Steel Water Bottle',
+//     variants: [
+//       { name: 'Size', options: ['16oz', '20oz', '32oz'] },
+//       { name: 'Color', options: ['Stainless', 'Black', 'Blue', 'Pink'] }
+//     ]
+//   },
+//   {
+//     id: 5,
+//     name: 'Yoga Mat Premium',
+//     price: 49.99,
+//     originalPrice: 69.99,
+//     image: '/images/products/yoga-mat.jpg',
+//     category: 'Sports',
+//     rating: 4.6,
+//     reviewCount: 203,
+//     inStock: true,
+//     description: 'Non-slip premium yoga mat with extra cushioning and alignment guides.',
+//     brand: 'ZenFit',
+//     thumbnail: '/images/products/yoga-mat_thumb.jpg',
+//     selectedVariant: {
+//       name: 'Thickness',
+//       value: '4mm'
+//     },    
+//     title: 'Yoga Mat Premium',
+//     variants: [
+//       { name: 'Thickness', options: ['4mm', '6mm', '8mm'] },
+//       { name: 'Color', options: ['Purple', 'Blue', 'Green', 'Pink'] }
+//     ]
+//   },
+//   {
+//     id: 6,
+//     name: 'LED Desk Lamp',
+//     price: 34.99,
+//     image: '/images/products/desk-lamp.jpg',
+//     category: 'Home & Garden',
+//     rating: 4.4,
+//     reviewCount: 167,
+//     inStock: false,
+//     description: 'Adjustable LED desk lamp with touch controls and USB charging port.',
+//     brand: 'BrightLight',
+//     thumbnail: '/images/products/desk-lamp_thumb.jpg',
+//     selectedVariant: {
+//       name: 'Color',
+//       value: 'White'
+//     },    
+//     title: 'LED Desk Lamp',
+//     variants: [
+//       { name: 'Color', options: ['White', 'Black', 'Silver'] }
+//     ]
+//   }
+// ];
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -191,7 +189,36 @@ export default function ProductsPage() {
       dispatch(setLoading(true));
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
-      dispatch(setProducts(mockProducts as Product[]));
+    try{
+  fetch('https://dummyjson.com/products?limit=50').then(res => res.json()).then(data => {
+        const products = data.products.map((product : Product) => {
+          const { id, title, price, description, category, thumbnail, rating, inStock, brand, originalPrice,images,reviewCount,variants,
+            selectedVariant } = product;
+          return {
+            id,
+            name: product.title,
+            price,
+            originalPrice,
+            image: images[0],
+            category,
+            rating,
+            reviewCount,
+            inStock,
+            description,
+            brand,
+            thumbnail,
+            title,
+            variants,
+            selectedVariant,
+          }
+        });
+        dispatch(setProducts(products as Product[]));
+      })
+       
+    }catch(err){
+console.log(err);
+    }
+     
     };
 
     loadProducts();
