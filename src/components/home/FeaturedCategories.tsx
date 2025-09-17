@@ -1,14 +1,15 @@
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Product } from '@/types/product';
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Product } from "@/types/product";
 
 interface TrendingProductsProps {
   products: Product[];
 }
 
-export const FeaturedCategories: React.FC<TrendingProductsProps> = ({products}) => {
-  console.log(products, "products in featured categories");
+export const FeaturedCategories: React.FC<TrendingProductsProps> = ({
+  products,
+}) => {
   return (
     <section className="py-12 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

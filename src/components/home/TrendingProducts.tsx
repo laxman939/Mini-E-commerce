@@ -1,35 +1,33 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
 // import Image from 'next/image';
-import { useCart } from '../../hooks/useCart';
-import { useWishlist } from '@/hooks/useWishList';
-import { Product } from '@/types/product';
-import ProductImageCarousel from '../product/ProductImageCarousel';
-import { calculateDiscountedPrice } from '@/lib/utils';
-import RenderStars from '../ui/RenderStar';
+import { useCart } from "../../hooks/useCart";
+import { useWishlist } from "@/hooks/useWishList";
+import { Product } from "@/types/product";
+import ProductImageCarousel from "../product/ProductImageCarousel";
+import { calculateDiscountedPrice } from "@/lib/utils";
+import RenderStars from "../ui/RenderStar";
 
 interface TrendingProductsProps {
   products: Product[];
 }
 
-
-export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) => {
+export const TrendingProducts: React.FC<TrendingProductsProps> = ({
+  products,
+}) => {
   // const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const { addItemCart } = useCart();
-  const { addItem: addToWishlist, isInWishlist,removeItem } = useWishlist();
+  const { addItem: addToWishlist, isInWishlist, removeItem } = useWishlist();
 
   useEffect(() => {
-    console.log(
-      products, "products in trending"
-    )
     // Simulate API call
     const fetchTrendingProducts = async () => {
       setLoading(true);
       // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       // setProducts(mockTrendingProducts);
 
       setLoading(false);
@@ -42,8 +40,6 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
     addItemCart(product, 1);
   };
 
- 
-
   if (loading) {
     return (
       <section className="py-12">
@@ -55,7 +51,10 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {Array.from({ length: 4 }).map((_, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <div
+                key={index}
+                className="bg-white rounded-lg shadow-md overflow-hidden"
+              >
                 <div className="h-48 bg-gray-200 animate-pulse"></div>
                 <div className="p-4">
                   <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
@@ -82,8 +81,7 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product : Product) => (
-            console.log(product, "product",product.images.length),
+          {products.map((product: Product) => (
             <div
               key={product.id}
               className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
@@ -104,28 +102,42 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
                   </div> */}
                   <ProductImageCarousel product={product} />
                 </Link>
-                
+
                 {/* Wishlist button */}
                 <button
-                  onClick={() => isInWishlist((product.id).toString()) ? removeItem((product.id).toString()) : addToWishlist(product)}
+                  onClick={() =>
+                    isInWishlist(product.id.toString())
+                      ? removeItem(product.id.toString())
+                      : addToWishlist(product)
+                  }
                   className={`absolute top-2 right-2 p-2 rounded-full ${
-                    isInWishlist((product.id).toString())
-                      ? 'bg-red-500 text-white'
-                      : 'bg-white text-gray-400 hover:text-red-500'
+                    isInWishlist(product.id.toString())
+                      ? "bg-red-500 text-white"
+                      : "bg-white text-gray-400 hover:text-red-500"
                   } shadow-md hover:shadow-lg transition-all duration-200`}
                 >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                      clipRule="evenodd"
+                    />
                   </svg>
                 </button>
 
                 {/* Sale badge */}
                 {/* {product.availabilityStatus === 'In Stock' ? ( */}
-                  <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 text-xs font-semibold rounded">
-                    {/* SALE */}
-                    {product.availabilityStatus === 'In Stock'  ? "SALE" : product.availabilityStatus}
-                  </div>
-              {/* //   )
+                <div className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 text-xs font-semibold rounded">
+                  {/* SALE */}
+                  {product.availabilityStatus === "In Stock"
+                    ? "SALE"
+                    : product.availabilityStatus}
+                </div>
+                {/* //   )
               //   :
               //   <div className="absolute top-2 left-2 bg-gray-500 text-white px-2 py-1 text-xs font-semibold rounded">
               //     {product.availabilityStatus}
@@ -154,11 +166,18 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center space-x-2">
                     <span className="text-lg font-bold text-gray-900">
-                      ₹{product.price}<span className='text-sm text-green-800'>({product.discountPercentage}%)</span>
+                      ₹{product.price}
+                      <span className="text-sm text-green-800">
+                        ({product.discountPercentage}%)
+                      </span>
                     </span>
-                    { product.price && (
+                    {product.price && (
                       <span className="text-sm text-gray-500 line-through">
-                       ₹{calculateDiscountedPrice(product.price, product.discountPercentage)}
+                        ₹
+                        {calculateDiscountedPrice(
+                          product.price,
+                          product.discountPercentage
+                        )}
                       </span>
                     )}
                   </div>
@@ -182,8 +201,18 @@ export const TrendingProducts: React.FC<TrendingProductsProps> = ({ products }) 
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-blue-600 bg-blue-100 hover:bg-blue-200 transition-colors duration-200"
           >
             View All Products
-            <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            <svg
+              className="ml-2 w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
             </svg>
           </Link>
         </div>

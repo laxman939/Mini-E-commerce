@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/store/store";
@@ -15,6 +15,14 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { ProductCard } from "@/components/product/ProductCard";
 import { Product } from "@/types/product";
 import { Header } from "@/components/layout/Header";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+
+enum SortOrder {
+  NAME = "name",
+  PRICE = "price",
+  RATING = "rating",
+  NEWEST = "newest",
+}
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
@@ -28,6 +36,10 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [pageSize, setPageSize] = useState(10);
+  const [scrollLoader, setScrollLoader] = useState(false);
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const prevPageSizeRef = useRef(pageSize);
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -36,7 +48,6 @@ export default function ProductsPage() {
     const category = searchParams.get("category");
     const sort = searchParams.get("sort");
     const search = searchParams.get("search");
-    console.log(category, "search category")
 
     if (category) dispatch(setCategory(category));
     if (sort) dispatch(setSortBy(sort as any));
@@ -46,40 +57,64 @@ export default function ProductsPage() {
     }
   }, [searchParams, dispatch]);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          // load more data here
+          setPageSize((prev) => prev + 10);
+        }
+      },
+      { threshold: 1 } // fully visible
+    );
+
+    if (loaderRef.current) observer.observe(loaderRef.current);
+
+    return () => {
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
+    };
+  }, []);
+
   // Update search query when debounced term changes
   useEffect(() => {
-     const category = searchParams.get("category");
-    const fetchProducts = async () => {
-      // const key = debouncedSearchTerm || "__all__"; // unique cache key
-      // ✅ Check cache first
-      // if (cacheRef.current[key]) {
-      //   dispatch(setProducts(cacheRef.current[key]));
-      //   return;
-      // }
-      // console.log(cacheRef.current[key], "cache")
+    const category = searchParams.get("category");
 
-      setIsLoading(true);
+    const fetchProducts = async () => {
+      setIsLoading(prevPageSizeRef.current === pageSize);
+      setScrollLoader(true);
       try {
         const url =
           debouncedSearchTerm && debouncedSearchTerm.length > 0
             ? `https://dummyjson.com/products/search?q=${debouncedSearchTerm}`
-            :`https://dummyjson.com/products?limit=${category ? 110 : 30}`;
+            : `https://dummyjson.com/products?limit=${category ? 110 : pageSize}`;
 
         const res = await fetch(url);
         const data = await res.json();
 
-        // ✅ Save result in cache
-        // cacheRef.current[key] = data.products as Product[];
-        dispatch(setProducts(data.products as Product[]));
+        if (pageSize < 100) {
+          //  if(pageSize < data.total ){
+          if (pageSize > 10) {
+            const unique = [
+              ...new Map(
+                [...products, ...data.products].map((p) => [p.id, p])
+              ).values(),
+            ];
+            dispatch(setProducts(unique));
+          } else {
+            dispatch(setProducts(data.products as Product[]));
+          }
+          prevPageSizeRef.current = pageSize;
+        }
       } catch (err) {
         console.error("Products fetch error:", err);
       } finally {
         setIsLoading(false);
+        setScrollLoader(false);
       }
     };
 
     fetchProducts();
-  }, [debouncedSearchTerm, dispatch]);
+  }, [debouncedSearchTerm, dispatch, pageSize]);
 
   // Filter and sort products
   const filteredProducts = React.useMemo(() => {
@@ -88,9 +123,11 @@ export default function ProductsPage() {
         !filters.category || product.category === filters.category;
       const matchesSearch =
         !filters.searchQuery ||
-        product.name?.toLowerCase().includes(filters.searchQuery.toLowerCase());
-      product.description
-        .toLowerCase()
+        product.name
+          ?.toLowerCase()
+          .includes(filters.searchQuery?.toLowerCase());
+      product?.description
+        ?.toLowerCase()
         .includes(filters.searchQuery.toLowerCase());
       const matchesPrice =
         product?.price >= filters.priceRange.min &&
@@ -98,7 +135,8 @@ export default function ProductsPage() {
       const matchesBrand =
         filters.brands.length === 0 || filters.brands.includes(product.brand);
       const matchesRating = product?.rating >= filters.rating;
-      const matchesStock = !filters.inStock || product.availabilityStatus !== "In Stock";
+      const matchesStock =
+        !filters.inStock || product.availabilityStatus !== "In Stock";
 
       return (
         matchesCategory &&
@@ -113,7 +151,6 @@ export default function ProductsPage() {
     // Sort products
     filtered.sort((a, b) => {
       let comparison = 0;
-
       switch (filters.sortBy) {
         case "name":
           comparison = Number(a.name?.localeCompare(b.name || ""));
@@ -138,13 +175,13 @@ export default function ProductsPage() {
     return filtered;
   }, [products, filters]);
 
-  const handleSortChange = (sortBy: string) => {
-    dispatch(setSortBy(sortBy as any));
+  const handleSortChange = (sortBy: SortOrder) => {
+    dispatch(setSortBy(sortBy));
   };
 
   // if (isLoading) {
   //   return (
-     
+
   //   );
   // }
 
@@ -224,7 +261,7 @@ export default function ProductsPage() {
               </div>
 
               <div className={`${showFilters ? "block" : "hidden"} lg:block`}>
-                <ProductFilters />
+                <ProductFilters setShowFilters={setShowFilters} />
               </div>
             </div>
           </div>
@@ -287,75 +324,94 @@ export default function ProductsPage() {
                 </button>
               </div>
             </div>
-<>
-{
-  isLoading ?
-   <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg shadow-md overflow-hidden"
-              >
-                <div className="h-48 bg-gray-200 animate-pulse"></div>
-                <div className="p-4">
-                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded animate-pulse w-2/3"></div>
+            <>
+              {isLoading ? (
+                <div className="min-h-screen bg-gray-50 py-8">
+                  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {Array.from({ length: 8 }).map((_, index) => (
+                        <div
+                          key={index}
+                          className="bg-white rounded-lg shadow-md overflow-hidden"
+                        >
+                          <div className="h-48 bg-gray-200 animate-pulse"></div>
+                          <div className="p-4">
+                            <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                            <div className="h-4 bg-gray-200 rounded animate-pulse w-2/3"></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      :
-<>
-     {/* Products Display */}
-            {filteredProducts.length === 0 ? (
-              <div className="text-center py-12">
-                <svg
-                  className="mx-auto w-24 h-24 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-                <h3 className="mt-4 text-lg font-medium text-gray-900">
-                  No products found
-                </h3>
-                <p className="mt-2 text-gray-500">
-                  Try adjusting your search or filter criteria.
-                </p>
-              </div>
-            ) : (
-              <div
-                className={
-                  viewMode === "grid"
-                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                    : "space-y-4"
-                }
-              >
-                {filteredProducts.map((product: Product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    viewMode={viewMode}
-                  />
-                ))}
-              </div>
-            )}
-</>
-}
-</>
-       
+              ) : (
+                <>
+                  {/* Products Display */}
+                  {filteredProducts.length === 0 ? (
+                    <div className="text-center py-12">
+                      <svg
+                        className="mx-auto w-24 h-24 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                      <h3 className="mt-4 text-lg font-medium text-gray-900">
+                        No products found
+                      </h3>
+                      <p className="mt-2 text-gray-500">
+                        Try adjusting your search or filter criteria.
+                      </p>
+                    </div>
+                  ) : (
+                    <div
+                      className={
+                        viewMode === "grid"
+                          ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                          : "space-y-4"
+                      }
+                    >
+                      {filteredProducts.map((product: Product) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          viewMode={viewMode}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              )}
+            </>
 
             {/* Pagination would go here */}
+            <div
+              className="h-10 flex items-center justify-center"
+              ref={loaderRef}
+              style={{ height: "40px" }}
+            >
+              {scrollLoader ? (
+                <p>
+                  <LoadingSpinner />
+                </p>
+              ) : (
+                pageSize < 100 && (
+                  <p
+                    className=""
+                    onClick={() => setPageSize((prev) => prev + 10)}
+                  >
+                    Load more...
+                  </p>
+                )
+              )}
+              {/* {!hasMore && <p>No more products</p>} */}
+            </div>
           </div>
         </div>
       </div>

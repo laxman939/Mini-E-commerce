@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useCart } from '../../hooks/useCart'
-import { CartItemType } from '@/types/product';
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useCart } from "../../hooks/useCart";
+import { CartItemType } from "@/types/product";
 
 interface CartItemProps {
   item: CartItemType;
@@ -12,18 +12,16 @@ interface CartItemProps {
 
 export const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const { updateItemQuantity, removeItem } = useCart();
-  console.log(item, "cart")
-
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity <= 0) {
-      removeItem((item.id).toString());
+      removeItem(item.id.toString());
     } else {
-      updateItemQuantity((item.id).toString(), newQuantity);
+      updateItemQuantity(item.id.toString(), newQuantity);
     }
   };
 
   const handleRemove = () => {
-    removeItem((item.id).toString());
+    removeItem(item.id.toString());
   };
 
   return (
@@ -48,7 +46,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
       <div className="flex-1 ml-6">
         <div className="flex justify-between">
           <div className="pr-6">
-            <Link 
+            <Link
               href={`/product/${item.id}`}
               className="text-lg font-medium text-gray-900 hover:text-blue-600"
             >
@@ -61,7 +59,7 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
               </p>
             )}
           </div>
-          
+
           {/* Price */}
           <div className="text-right">
             <p className="text-lg font-medium text-gray-900">
@@ -85,8 +83,18 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
                 className="px-3 py-1 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
                 disabled={item.quantity <= 1}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20 12H4"
+                  />
                 </svg>
               </button>
               <input
@@ -94,15 +102,27 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
                 type="number"
                 min="1"
                 value={item.quantity}
-                onChange={(e) => handleQuantityChange(parseInt(e.target.value) || 1)}
+                onChange={(e) =>
+                  handleQuantityChange(parseInt(e.target.value) || 1)
+                }
                 className="w-16 px-2 py-1 text-center border-0 focus:ring-0 focus:outline-none"
               />
               <button
                 onClick={() => handleQuantityChange(item.quantity + 1)}
                 className="px-3 py-1 text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
                 </svg>
               </button>
             </div>

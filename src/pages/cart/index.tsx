@@ -1,24 +1,33 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { useCart } from '@/hooks/useCart';
-import { CartSummary } from '@/components/cart/CartSummary';
-import { PromoCodeForm } from '@/components/cart/PromoCodeForm';
-import { CartItemType } from '@/types/product';
-import { CartItem } from '@/components/cart/CartItem';
+import React from "react";
+import Link from "next/link";
+import { useCart } from "@/hooks/useCart";
+import { CartSummary } from "@/components/cart/CartSummary";
+import { PromoCodeForm } from "@/components/cart/PromoCodeForm";
+import { CartItemType } from "@/types/product";
+import { CartItem } from "@/components/cart/CartItem";
 
 export default function CartPage() {
   const { cart, clearCartItems, getCartItemsCount } = useCart();
-console.log(cart, "cart list")
   if (cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="mx-auto w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center mb-6">
-              <svg className="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293M7 13h10" />
+              <svg
+                className="w-12 h-12 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.293 2.293M7 13h10"
+                />
               </svg>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
@@ -45,7 +54,8 @@ console.log(cart, "cart list")
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
           <p className="text-gray-600 mt-2">
-            {getCartItemsCount()} {getCartItemsCount() === 1 ? 'item' : 'items'} in your cart
+            {getCartItemsCount()} {getCartItemsCount() === 1 ? "item" : "items"}{" "}
+            in your cart
           </p>
         </div>
 
@@ -62,10 +72,13 @@ console.log(cart, "cart list")
                   Clear Cart
                 </button>
               </div>
-              
+
               <div className="divide-y divide-gray-200">
                 {cart.items.map((item: CartItemType) => (
-                  <CartItem key={`${item.id}-${item.selectedVariant?.name || ''}`} item={item} />
+                  <CartItem
+                    key={`${item.id}-${item.selectedVariant?.name || ""}`}
+                    item={item}
+                  />
                 ))}
               </div>
             </div>

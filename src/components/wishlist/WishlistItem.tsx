@@ -1,46 +1,45 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 // import Image from 'next/image';
-import Link from 'next/link';
-import { Product } from '@/types/product';
-import {addToCart} from '@/store/slices/cartSlice';
-import {Button} from '@/components/ui/Button';
-import {  ShoppingCart, Trash2, Eye } from 'lucide-react';
-import { useDispatch } from 'react-redux';
-import ProductImageCarousel from '../product/ProductImageCarousel';
-import { calculateDiscountedPrice } from '@/lib/utils';
+import Link from "next/link";
+import { Product } from "@/types/product";
+import { addToCart } from "@/store/slices/cartSlice";
+import { Button } from "@/components/ui/Button";
+import { ShoppingCart, Trash2, Eye } from "lucide-react";
+import { useDispatch } from "react-redux";
+import ProductImageCarousel from "../product/ProductImageCarousel";
+import { calculateDiscountedPrice } from "@/lib/utils";
 
 interface WishlistItemProps {
   product: Product;
-//   isSelected: boolean;
-//   onSelect: (productId: string) => void;
+  //   isSelected: boolean;
+  //   onSelect: (productId: string) => void;
   onRemove: (productId: string) => void;
-//   onMoveToCart: (product: Product) => void;
+  //   onMoveToCart: (product: Product) => void;
 }
 
 export default function WishlistItem({
   product,
-//   isSelected,
-//   onSelect,
+  //   isSelected,
+  //   onSelect,
   onRemove,
-//   onMoveToCart
+  //   onMoveToCart
 }: WishlistItemProps) {
   const [isLoading, setIsLoading] = useState(false);
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const handleAddToCart = async () => {
     setIsLoading(true);
-    try{ 
-      dispatch(addToCart({ product, quantity: 1}));
-    //   onMoveToCart(product);
+    try {
+      dispatch(addToCart({ product, quantity: 1 }));
+      //   onMoveToCart(product);
     } catch (error) {
-      console.error('Failed to add to cart:', error);
+      console.error("Failed to add to cart:", error);
     } finally {
       setIsLoading(false);
     }
   };
-
 
   return (
     <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden group">
@@ -49,7 +48,7 @@ export default function WishlistItem({
         <Link href={`/product/${product.id}`}>
           <ProductImageCarousel product={product} />
         </Link>
-        
+
         {/* Discount Badge */}
         {product.discountPercentage > 0 && (
           <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded">
@@ -62,14 +61,14 @@ export default function WishlistItem({
           <Link href={`/product/${product.id}`}>
             <Button
               size="sm"
-            //   variant="secondary"
+              //   variant="secondary"
               className="flex items-center space-x-1"
             >
               <Eye className="h-4 w-4" />
               <span>View</span>
             </Button>
           </Link>
-          
+
           <Button
             size="sm"
             onClick={handleAddToCart}
@@ -85,13 +84,13 @@ export default function WishlistItem({
       {/* Product Info */}
       <div className="p-4">
         <div className="flex items-start justify-between mb-2">
-          <Link 
+          <Link
             href={`/product/${product.id}`}
             className="text-sm font-medium text-gray-900 hover:text-blue-600 transition-colors line-clamp-2"
           >
             {product.title}
           </Link>
-          
+
           {/* <button
             onClick={() => onRemove((product.id).toString())}
             className="text-gray-400 hover:text-red-500 transition-colors p-1"
@@ -108,14 +107,20 @@ export default function WishlistItem({
 
         {/* Price */}
         <div className="flex items-center space-x-2 mb-3">
-           <span className="text-lg font-bold text-gray-900">
-                ₹{product.price}<span className='text-sm text-gray-500'>({product.discountPercentage}%)</span>
+          <span className="text-lg font-bold text-gray-900">
+            ₹{product.price}
+            <span className="text-sm text-gray-500">
+              ({product.discountPercentage}%)
             </span>
-         <span className="text-sm text-gray-500 line-through">
-            ₹{calculateDiscountedPrice(product.price, product.discountPercentage)}
-         </span>
+          </span>
+          <span className="text-sm text-gray-500 line-through">
+            ₹
+            {calculateDiscountedPrice(
+              product.price,
+              product.discountPercentage
+            )}
+          </span>
         </div>
-
 
         {/* Rating */}
         {product.rating && (
@@ -126,8 +131,8 @@ export default function WishlistItem({
                   key={i}
                   className={`h-4 w-4 ${
                     i < Math.floor(product.rating!)
-                      ? 'text-yellow-400'
-                      : 'text-gray-300'
+                      ? "text-yellow-400"
+                      : "text-gray-300"
                   }`}
                   fill="currentColor"
                   viewBox="0 0 20 20"
@@ -164,12 +169,12 @@ export default function WishlistItem({
             size="sm"
           >
             <ShoppingCart className="h-4 w-4" />
-            <span>{isLoading ? 'Adding...' : 'Add to Cart'}</span>
+            <span>{isLoading ? "Adding..." : "Add to Cart"}</span>
           </Button>
-          
+
           <Button
             variant="outline"
-            onClick={() => onRemove((product.id).toString())}
+            onClick={() => onRemove(product.id.toString())}
             className="flex items-center justify-center px-3"
             size="sm"
           >

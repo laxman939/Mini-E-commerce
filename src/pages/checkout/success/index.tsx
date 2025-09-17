@@ -1,7 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { CheckCircle, Package, Truck, Mail, Download, ArrowRight, Heart, Star } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
-import { ShippingInfo } from '@/types/product';
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  CheckCircle,
+  Package,
+  Truck,
+  Mail,
+  Download,
+  ArrowRight,
+  Heart,
+  Star,
+} from "lucide-react";
+import { useCart } from "@/hooks/useCart";
+import { ShippingInfo } from "@/types/product";
 
 // Confetti Component
 interface Particle {
@@ -26,13 +35,13 @@ interface ConfettiProps {
 }
 
 const DEFAULT_COLORS = [
-  '#ff6b6b', 
-  '#4ecdc4', 
-  '#45b7d1', 
-  '#f9ca24', 
-  '#f0932b', 
-  '#eb4d4b', 
-  '#6c5ce7'
+  "#ff6b6b",
+  "#4ecdc4",
+  "#45b7d1",
+  "#f9ca24",
+  "#f0932b",
+  "#eb4d4b",
+  "#6c5ce7",
 ];
 
 const Confetti: React.FC<ConfettiProps> = ({
@@ -41,12 +50,12 @@ const Confetti: React.FC<ConfettiProps> = ({
   duration = 5000,
   colors = DEFAULT_COLORS,
   gravity = 0.1,
-  windResistance = 0.99
+  windResistance = 0.99,
 }) => {
   const [particles, setParticles] = useState<Particle[]>([]);
-  const [windowDimensions, setWindowDimensions] = useState({ 
-    width: typeof window !== 'undefined' ? window.innerWidth : 1200, 
-    height: typeof window !== 'undefined' ? window.innerHeight : 800 
+  const [windowDimensions, setWindowDimensions] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 1200,
+    height: typeof window !== "undefined" ? window.innerHeight : 800,
   });
 
   // Handle window resize
@@ -58,16 +67,16 @@ const Confetti: React.FC<ConfettiProps> = ({
       });
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
     }
   }, []);
 
   // Create particles
   const createParticles = useCallback((): Particle[] => {
     const newParticles: Particle[] = [];
-    
+
     for (let i = 0; i < particleCount; i++) {
       newParticles.push({
         id: i,
@@ -81,13 +90,13 @@ const Confetti: React.FC<ConfettiProps> = ({
         rotationSpeed: (Math.random() - 0.5) * 10,
       });
     }
-    
+
     return newParticles;
   }, [particleCount, windowDimensions.width, colors]);
 
   // Animate particles
   const animateParticles = useCallback((): void => {
-    setParticles(prevParticles => 
+    setParticles((prevParticles) =>
       prevParticles
         .map((particle: Particle) => ({
           ...particle,
@@ -97,10 +106,11 @@ const Confetti: React.FC<ConfettiProps> = ({
           vy: particle.vy + gravity, // Apply gravity
           vx: particle.vx * windResistance, // Apply wind resistance
         }))
-        .filter((particle: Particle) => 
-          particle.y < windowDimensions.height + 50 && 
-          particle.x > -50 && 
-          particle.x < windowDimensions.width + 50
+        .filter(
+          (particle: Particle) =>
+            particle.y < windowDimensions.height + 50 &&
+            particle.x > -50 &&
+            particle.x < windowDimensions.width + 50
         )
     );
   }, [gravity, windResistance, windowDimensions]);
@@ -149,7 +159,7 @@ const Confetti: React.FC<ConfettiProps> = ({
             transform: `rotate(${particle.rotation}deg)`,
             width: `${particle.size}px`,
             height: `${particle.size}px`,
-            transition: 'opacity 0.3s ease-out',
+            transition: "opacity 0.3s ease-out",
           }}
           aria-hidden="true"
         />
@@ -170,10 +180,10 @@ export const ConfettiExample: React.FC = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Confetti active={showConfetti} />
-      
+
       <div className="text-center">
         <h1 className="text-3xl font-bold mb-8">Confetti Demo</h1>
-        
+
         <div className="space-y-4">
           <button
             onClick={triggerConfetti}
@@ -181,7 +191,7 @@ export const ConfettiExample: React.FC = () => {
           >
             🎉 Trigger Confetti
           </button>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
             <button
               onClick={() => setShowConfetti(true)}
@@ -189,7 +199,7 @@ export const ConfettiExample: React.FC = () => {
             >
               Start Confetti
             </button>
-            
+
             <button
               onClick={() => setShowConfetti(false)}
               className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors"
@@ -202,7 +212,7 @@ export const ConfettiExample: React.FC = () => {
         {/* Custom Confetti Examples */}
         <div className="mt-8 space-y-2">
           <h2 className="text-xl font-semibold mb-4">Custom Configurations</h2>
-          
+
           <button
             onClick={() => {
               setShowConfetti(false);
@@ -212,7 +222,7 @@ export const ConfettiExample: React.FC = () => {
           >
             💜 Purple Theme
           </button>
-          
+
           <button
             onClick={() => {
               setShowConfetti(false);
@@ -228,15 +238,12 @@ export const ConfettiExample: React.FC = () => {
   );
 };
 
-
 const CheckoutSuccessPage = () => {
-    const { cart, clearCartItems,getCartTotal,clearOrderInfo } = useCart();
-    const [showConfetti, setShowConfetti] = useState(true);
+  const { cart, clearCartItems, getCartTotal, clearOrderInfo } = useCart();
+  const [showConfetti, setShowConfetti] = useState(true);
   const [orderData] = useState<ShippingInfo | null>(cart?.orderInfo || null);
-    console.log( cart, "orderInfo")
 
   useEffect(() => {
-
     // Stop confetti after 3 seconds
     const timer = setTimeout(() => {
       setShowConfetti(false);
@@ -247,18 +254,18 @@ const CheckoutSuccessPage = () => {
 
   const handleDownloadReceipt = () => {
     // In a real app, this would download the receipt PDF
-    console.log('Downloading receipt...');
+    console.log("Downloading receipt...");
   };
 
   const handleTrackOrder = () => {
     // In a real app, this would redirect to tracking page
-    console.log('Redirecting to order tracking...');
+    console.log("Redirecting to order tracking...");
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50">
       <Confetti active={showConfetti} />
-      
+
       <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         {/* Success Header */}
         <div className="text-center mb-12">
@@ -268,7 +275,7 @@ const CheckoutSuccessPage = () => {
               <CheckCircle className="h-12 w-12 text-white" />
             </div>
           </div>
-          
+
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Order Confirmed! 🎉
           </h1>
@@ -286,16 +293,24 @@ const CheckoutSuccessPage = () => {
             {/* Order Details Card */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="bg-gradient-to-r from-green-500 to-blue-500 px-6 py-4">
-                <h2 className="text-xl font-semibold text-white">Order Details</h2>
+                <h2 className="text-xl font-semibold text-white">
+                  Order Details
+                </h2>
               </div>
               <div className="p-6">
                 <div className="grid grid-cols-2 gap-6 mb-6">
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">Order ID</p>
-                    <p className="text-lg font-semibold text-gray-900">{orderData?.orderId}</p>
+                    <p className="text-sm font-medium text-gray-500 mb-1">
+                      Order ID
+                    </p>
+                    <p className="text-lg font-semibold text-gray-900">
+                      {orderData?.orderId}
+                    </p>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">Email</p>
+                    <p className="text-sm font-medium text-gray-500 mb-1">
+                      Email
+                    </p>
                     <p className="text-lg text-gray-900">{orderData?.email}</p>
                   </div>
                 </div>
@@ -306,7 +321,10 @@ const CheckoutSuccessPage = () => {
                     Items Ordered ({cart.items.length})
                   </h3>
                   {cart.items.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+                    <div
+                      key={item.id}
+                      className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
+                    >
                       {/* <Image
                         src={item.image}
                         alt={item.title}
@@ -314,11 +332,17 @@ const CheckoutSuccessPage = () => {
                         className="w-16 h-16 object-contain rounded-lg"
                       /> */}
                       <div className="flex-1">
-                        <h4 className="font-medium text-gray-900">{item.name}</h4>
-                        <p className="text-sm text-gray-500">Quantity: {item.quantity}</p>
+                        <h4 className="font-medium text-gray-900">
+                          {item.name}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                          Quantity: {item.quantity}
+                        </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-semibold text-gray-900">₹{item.price}</p>
+                        <p className="font-semibold text-gray-900">
+                          ₹{item.price}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -327,8 +351,12 @@ const CheckoutSuccessPage = () => {
                 {/* Order Total */}
                 <div className="border-t border-gray-100 pt-4 mt-6">
                   <div className="flex justify-between items-center">
-                    <span className="text-lg font-semibold text-gray-900">Total</span>
-                    <span className="text-2xl font-bold text-green-600">₹{getCartTotal()}</span>
+                    <span className="text-lg font-semibold text-gray-900">
+                      Total
+                    </span>
+                    <span className="text-2xl font-bold text-green-600">
+                      ₹{getCartTotal()}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -342,9 +370,13 @@ const CheckoutSuccessPage = () => {
               </h3>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Delivery Address</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Delivery Address
+                  </h4>
                   <div className="text-gray-600 space-y-1">
-                    <p>{orderData?.firstName} {orderData?.lastName}</p>
+                    <p>
+                      {orderData?.firstName} {orderData?.lastName}
+                    </p>
                     <p>{orderData?.address}</p>
                     <p>
                       {orderData?.city}, {orderData?.state} {orderData?.zipCode}
@@ -353,15 +385,21 @@ const CheckoutSuccessPage = () => {
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-medium text-gray-900 mb-2">Delivery Details</h4>
+                  <h4 className="font-medium text-gray-900 mb-2">
+                    Delivery Details
+                  </h4>
                   <div className="space-y-2">
                     <div className="flex items-center text-sm">
                       <span className="text-gray-500 w-24">Estimated:</span>
-                      <span className="text-gray-900 font-medium">{orderData?.deliveryDate}</span>
+                      <span className="text-gray-900 font-medium">
+                        {orderData?.deliveryDate}
+                      </span>
                     </div>
                     <div className="flex items-center text-sm">
                       <span className="text-gray-500 w-24">Tracking:</span>
-                      <span className="text-gray-900 font-medium">{orderData?.trackingNumber}</span>
+                      <span className="text-gray-900 font-medium">
+                        {orderData?.trackingNumber}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -373,7 +411,9 @@ const CheckoutSuccessPage = () => {
           <div className="space-y-6">
             {/* Quick Actions */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Quick Actions
+              </h3>
               <div className="space-y-3">
                 <button
                   onClick={handleDownloadReceipt}
@@ -382,7 +422,7 @@ const CheckoutSuccessPage = () => {
                   <Download className="h-4 w-4" />
                   <span>Download Receipt</span>
                 </button>
-                
+
                 <button
                   onClick={handleTrackOrder}
                   className="w-full flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg transition-colors"
@@ -390,12 +430,13 @@ const CheckoutSuccessPage = () => {
                   <Package className="h-4 w-4" />
                   <span>Track Your Order</span>
                 </button>
-                
+
                 <button
                   onClick={() => {
-                    clearCartItems()
-                    clearOrderInfo()
-                    window.location.href = '/products'}}
+                    clearCartItems();
+                    clearOrderInfo();
+                    window.location.href = "/products";
+                  }}
                   className="w-full flex items-center justify-center space-x-2 border border-gray-300 hover:border-gray-400 text-gray-700 px-4 py-3 rounded-lg transition-colors"
                 >
                   <ArrowRight className="h-4 w-4" />
@@ -406,7 +447,9 @@ const CheckoutSuccessPage = () => {
 
             {/* Order Status Timeline */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Status</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                Order Status
+              </h3>
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
@@ -417,7 +460,7 @@ const CheckoutSuccessPage = () => {
                     <p className="text-sm text-gray-500">Just now</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
                     <Package className="h-4 w-4 text-gray-500" />
@@ -427,7 +470,7 @@ const CheckoutSuccessPage = () => {
                     <p className="text-sm text-gray-400">1-2 business days</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
                     <Truck className="h-4 w-4 text-gray-500" />
@@ -437,14 +480,16 @@ const CheckoutSuccessPage = () => {
                     <p className="text-sm text-gray-400">2-3 business days</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center space-x-3">
                   <div className="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
                     <CheckCircle className="h-4 w-4 text-gray-500" />
                   </div>
                   <div>
                     <p className="font-medium text-gray-500">Delivered</p>
-                    <p className="text-sm text-gray-400">{orderData?.deliveryDate}</p>
+                    <p className="text-sm text-gray-400">
+                      {orderData?.deliveryDate}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -455,13 +500,17 @@ const CheckoutSuccessPage = () => {
               <div className="flex items-start space-x-3">
                 <Mail className="h-6 w-6 text-purple-600 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-purple-900 mb-2">Email Updates</h3>
+                  <h3 className="font-semibold text-purple-900 mb-2">
+                    Email Updates
+                  </h3>
                   <p className="text-sm text-purple-700 mb-3">
-                    We&apos;ve sent a confirmation email to <span className="font-medium">{orderData?.email}</span> 
+                    We&apos;ve sent a confirmation email to{" "}
+                    <span className="font-medium">{orderData?.email}</span>
                     with your order details and tracking information.
                   </p>
                   <p className="text-xs text-purple-600">
-                    Check your spam folder if you don&apos;t see it in your inbox.
+                    Check your spam folder if you don&apos;t see it in your
+                    inbox.
                   </p>
                 </div>
               </div>
@@ -472,9 +521,12 @@ const CheckoutSuccessPage = () => {
               <div className="flex items-start space-x-3">
                 <Heart className="h-6 w-6 text-orange-600 mt-0.5" />
                 <div>
-                  <h3 className="font-semibold text-orange-900 mb-2">Love Your Purchase?</h3>
+                  <h3 className="font-semibold text-orange-900 mb-2">
+                    Love Your Purchase?
+                  </h3>
                   <p className="text-sm text-orange-700 mb-3">
-                    Help others discover great products by leaving a review after you receive your order.
+                    Help others discover great products by leaving a review
+                    after you receive your order.
                   </p>
                   <button className="flex items-center space-x-1 text-xs text-orange-600 hover:text-orange-700 font-medium">
                     <Star className="h-3 w-3" />
@@ -489,9 +541,12 @@ const CheckoutSuccessPage = () => {
         {/* Additional Information */}
         <div className="mt-12 text-center">
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Need Help?</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Need Help?
+            </h3>
             <p className="text-gray-600 mb-6">
-              Our customer support team is here to help with any questions about your order.
+              Our customer support team is here to help with any questions about
+              your order.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <button className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2 rounded-lg transition-colors">

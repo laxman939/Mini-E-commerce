@@ -13,12 +13,12 @@ const ProductImageCarousel = ({ product  }: { product: Product }) => {
     ? product.images 
     : [product.thumbnail].filter(Boolean);
 
-  // Auto-advance images every 6 seconds
+  // Auto-advance images every 4 seconds
   useEffect(() => {
     if (allImages.length > 1 && !isPaused) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % allImages.length);
-      },6000);
+      },4000);
       
       return () => clearInterval(interval);
     }

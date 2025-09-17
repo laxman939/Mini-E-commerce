@@ -15,7 +15,12 @@ import {
 import { brands, categories } from '@/lib/constants'
 import Link from 'next/link';
 
-export const ProductFilters: React.FC = () => {
+interface ProductFiltersProps {
+  setShowFilters: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+
+export const ProductFilters: React.FC<ProductFiltersProps> = ({setShowFilters}) => {
   const dispatch = useDispatch();
   const filters = useSelector((state: RootState) => state.filters);
 
@@ -40,6 +45,7 @@ export const ProductFilters: React.FC = () => {
 
   const handleResetFilters = () => {
     dispatch(resetFilters());
+    setShowFilters(false)
   };
 
   return (
@@ -60,14 +66,18 @@ export const ProductFilters: React.FC = () => {
           <h3 className="text-sm font-medium text-gray-900 mb-3">Category</h3>
           <div className="space-y-2">
             {categories.map((category) => (
-              <Link  key={category}  href={`/products?category=${encodeURIComponent(category)}`}>
+              <Link  key={category}  href={`/products?category=${encodeURIComponent(category)}`}
+             
+              >
               <label className="flex items-center my-2"
               >
                 <input
                   type="radio"
                   name="category"
                   checked={filters.category === category}
-                  onChange={() => handleCategoryChange(category)}
+                  onChange={() => {handleCategoryChange(category)
+                    setShowFilters(false)
+                  }}
                   className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                 />
                 <span className="ml-2 text-sm text-gray-700 first-letter:uppercase">{category}</span>
@@ -112,11 +122,14 @@ export const ProductFilters: React.FC = () => {
           <h3 className="text-sm font-medium text-gray-900 mb-3">Brand</h3>
           <div className="space-y-2">
             {brands.map((brand) => (
-              <label key={brand} className="flex items-center">
+              <label key={brand} className="flex items-center"
+              >
                 <input
                   type="checkbox"
                   checked={filters.brands.includes(brand)}
-                  onChange={(e) => handleBrandChange(brand, e.target.checked)}
+                  onChange={(e) => {handleBrandChange(brand, e.target.checked)
+                    setShowFilters(false)
+                  }}
                   className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                 />
                 <span className="ml-2 text-sm text-gray-700">{brand}</span>
@@ -130,12 +143,17 @@ export const ProductFilters: React.FC = () => {
           <h3 className="text-sm font-medium text-gray-900 mb-3">Minimum Rating</h3>
           <div className="space-y-2">
             {[5, 4, 3, 2, 1].map((rating) => (
-              <label key={rating} className="flex items-center">
+              <label key={rating} className="flex items-center"
+                
+              >
                 <input
                   type="radio"
                   name="rating"
                   checked={filters.rating === rating}
-                  onChange={() => dispatch(setRating(rating))}
+                  onChange={() => {
+                    dispatch(setRating(rating))
+                  setShowFilters(false)
+                  }}
                   className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                 />
                 <div className="ml-2 flex items-center">
@@ -164,7 +182,9 @@ export const ProductFilters: React.FC = () => {
             <input
               type="checkbox"
               checked={filters.inStock}
-              onChange={(e) => dispatch(setInStock(e.target.checked))}
+              onChange={(e) => {dispatch(setInStock(e.target.checked))
+                setShowFilters(false)
+              }}
               className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
             />
             <span className="ml-2 text-sm text-gray-700">Out of Stock Only</span>
