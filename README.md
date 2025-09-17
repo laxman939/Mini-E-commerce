@@ -11,8 +11,8 @@ This project demonstrates modern frontend practices such as component-driven arc
 - **State Management:** [Redux Toolkit](https://redux-toolkit.js.org/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)  
 - **Data Fetching:** Native Fetch API + [DummyJSON](https://dummyjson.com/products)  
-- **Persistence:** LocalStorage (cart & wishlist)
-- **Build & Deploy:** Vercel / Netlify  
+- **Persistence:** Redux Toolkit (slices), redux-persist (cart & wishlist)
+- **Build & Deploy:** Vercel  
 - **Version Control:** Git & GitHub
 
 ---
@@ -27,7 +27,7 @@ This project demonstrates modern frontend practices such as component-driven arc
 ### 📃 Product Listing Page (PLP)
 - Filters → Category, Brand, Price Range, Rating  
 - Sorting → Relevance, Price (Low → High), Newest  
-- Infinite scroll / pagination  
+- Infinite scroll  
 - Search bar with debounce  
 
 ### 📦 Product Detail Page (PDP)
@@ -43,7 +43,7 @@ This project demonstrates modern frontend practices such as component-driven arc
 - Price breakdown (MRP, discount, tax, total)  
 - Sticky mobile checkout bar  
 
-### ✅ Checkout Modal (Optional)
+### ✅ Checkout page
 - Dummy form (Name, Email, Address, etc.)  
 - Success message after submission  
 
@@ -110,22 +110,11 @@ This project demonstrates modern frontend practices such as component-driven arc
 - Remove items easily  
 - Persistent storage with LocalStorage  
 
-### ✅ Checkout Page (Optional)
+### ✅ Checkout Page
 - Dummy form (Name, Email, Address, etc.)  
 - Success message after submission  
 
 ---
-
-## 📂 Project Structure
-
-```bash
-├── components/       # Reusable UI & Product components
-├── pages/            # Next.js pages (Home, Products, PDP, Cart)
-├── store/            # Redux slices (products, filters, cart)
-├── hooks/            # Custom hooks (useDebounce, etc.)
-├── styles/           # Tailwind CSS config
-├── types/            # TypeScript interfaces (Product, Cart, etc.)
-└── public/           # Static assets
 
 
 
