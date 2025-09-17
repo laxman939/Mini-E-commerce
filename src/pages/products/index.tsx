@@ -274,13 +274,15 @@ export default function ProductsPage() {
                 {/* Sort Dropdown */}
                 <select
                   value={filters.sortBy}
-                  onChange={(e) => handleSortChange(e.target.value)}
+  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+    handleSortChange(e.target.value as SortOrder) // 👈 cast to enum
+  }
                   className="px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-40"
                 >
-                  <option value="name">Sort by Name</option>
-                  <option value="price">Sort by Price</option>
-                  <option value="rating">Sort by Rating</option>
-                  <option value="newest">Newest First</option>
+                  <option value={SortOrder.NAME}>Sort by Name</option>
+  <option value={SortOrder.PRICE}>Sort by Price</option>
+  <option value={SortOrder.RATING}>Sort by Rating</option>
+  <option value={SortOrder.NEWEST}>Newest First</option>
                 </select>
               </div>
 

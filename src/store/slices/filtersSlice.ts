@@ -11,7 +11,7 @@ interface FiltersState {
   brands: string[];
   rating: number;
   inStock: boolean;
-  sortBy: 'name' | 'price' | 'rating' | 'newest';
+  sortBy: 'name' | 'price' | 'rating' | 'newest' | string;
   sortOrder: 'asc' | 'desc';
   searchQuery: string;
 }
