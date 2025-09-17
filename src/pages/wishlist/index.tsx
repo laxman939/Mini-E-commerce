@@ -47,7 +47,7 @@ const dispatch = useDispatch();
     
     for (const product of selectedProducts) {
       await       dispatch(addToCart({ product, quantity: 1}));
-      removeItem(product.id);
+      removeItem((product.id).toString());
     }
     setSelectedItems([]);
   };
