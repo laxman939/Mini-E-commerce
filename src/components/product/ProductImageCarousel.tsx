@@ -14,15 +14,20 @@ const ProductImageCarousel = ({ product  }: { product: Product }) => {
     : [product.thumbnail].filter(Boolean);
 
   // Auto-advance images every 4 seconds
-  useEffect(() => {
-    if (allImages.length > 1 && !isPaused) {
-      const interval = setInterval(() => {
-        setCurrentIndex((prev) => (prev + 1) % allImages.length);
-      },4000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [allImages.length]);
+useEffect(() => {
+  let interval: NodeJS.Timeout | undefined;
+
+  if (allImages.length > 1 && !isPaused) {
+    interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % allImages.length);
+    }, 4000);
+  }
+
+  return () => {
+    if (interval) clearInterval(interval);
+  };
+}, [allImages.length, isPaused]);
+
 
   const nextImage = (e: React.MouseEvent<HTMLButtonElement>) => {
      e.preventDefault(); 
