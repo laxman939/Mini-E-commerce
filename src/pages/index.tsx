@@ -12,7 +12,7 @@ export default function Home({ products,uniqueData }: { products: Product[], uni
     <>
     <Header />
      <HeroBanner />
-     {uniqueData.length > 0 ? <FeaturedCategories products={uniqueData}/> : <LoadingSpinner />}
+     {uniqueData.length > 0 ? <FeaturedCategories products={uniqueData} /> : <LoadingSpinner />}
       <TrendingProducts products={products.slice(0,8)} />
       {/* <TrendingProducts/> */}
       <Footer/>
@@ -20,21 +20,26 @@ export default function Home({ products,uniqueData }: { products: Product[], uni
   )
 }
 export async function getServerSideProps() {
-  const res = await fetch('https://dummyjson.com/products?limit=50');
+  const res = await fetch('https://dummyjson.com/products?limit=115');
   const data = await res.json();
 
   const uniqueData: Product[] = [];
+  const  categories =  []
+  const brands = [];
   for(const item of data.products){
     if(!uniqueData.some((prod) => prod.category === item.category)){
       uniqueData.push(item);
+      categories.push(item.category);
+      brands.push(item.brand);
     }
   }
-  // console.log(uniqueData, "uniqueData");
+  console.log(categories,brands, "categories");
 
   return {
     props: {
       products: data.products,
       uniqueData: uniqueData,
+      categories: categories,
     },
   };
 }

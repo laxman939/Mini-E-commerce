@@ -3,8 +3,8 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCart } from '../../hooks/useCart';
-import { CartItem as CartItemType } from '../../types/cart';
+import { useCart } from '../../hooks/useCart'
+import { CartItemType } from '@/types/product';
 
 interface CartItemProps {
   item: CartItemType;
@@ -12,6 +12,7 @@ interface CartItemProps {
 
 export const CartItem: React.FC<CartItemProps> = ({ item }) => {
   const { updateItemQuantity, removeItem } = useCart();
+  console.log(item, "cart")
 
   const handleQuantityChange = (newQuantity: number) => {
     if (newQuantity <= 0) {
@@ -30,15 +31,16 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
       {/* Product Image */}
       <div className="flex-shrink-0 w-20 h-20 bg-gray-200 rounded-md overflow-hidden">
         <Image
-          src={item.image}
+          src={item.images[0] || item.thumbnail}
           alt={item.name}
+          // fill
           width={80}
           height={80}
-          className="object-cover w-full h-full"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = `https://via.placeholder.com/80x80/f3f4f6/6b7280?text=${item.name}`;
-          }}
+          className="object-contain w-full h-full"
+          // onError={(e) => {
+          //   const target = e.target as HTMLImageElement;
+          //   target.src = `https://via.placeholder.com/80x80/f3f4f6/6b7280?text=${item.name}`;
+          // }}
         />
       </div>
 
@@ -63,10 +65,10 @@ export const CartItem: React.FC<CartItemProps> = ({ item }) => {
           {/* Price */}
           <div className="text-right">
             <p className="text-lg font-medium text-gray-900">
-              ${(item.price * item.quantity).toFixed(2)}
+              ₹{(item.price * item.quantity).toFixed(2)}
             </p>
             <p className="text-sm text-gray-500">
-              ${item.price.toFixed(2)} each
+              ₹{item.price.toFixed(2)} each
             </p>
           </div>
         </div>

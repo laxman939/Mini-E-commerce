@@ -5,18 +5,9 @@ import { useRouter } from 'next/navigation';
 import { useCart } from '@/hooks/useCart';
 import { CartSummary } from '@/components/cart/CartSummary';
 import { Input } from '@/components/ui/Input';
+import { ShippingInfo } from '@/types/product';
+import { generateOrderDetails } from '@/lib/utils';
 
-interface ShippingInfo {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
-}
 
 interface PaymentInfo {
   cardNumber: string;
@@ -27,7 +18,7 @@ interface PaymentInfo {
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCartItems, getCartItemsCount } = useCart();
+  const { cart,addOrderInfo } = useCart();
   const [currentStep, setCurrentStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -97,7 +88,6 @@ export default function CheckoutPage() {
     if (paymentInfo.cvv && (paymentInfo.cvv.length < 3 || paymentInfo.cvv.length > 4)) {
       newErrors.cvv = 'Please enter a valid CVV';
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -118,7 +108,11 @@ export default function CheckoutPage() {
       await new Promise(resolve => setTimeout(resolve, 2000));
       
       // Clear cart and redirect to success page
-      clearCartItems();
+      // clearCartItems();//hold 
+      const  {orderId,
+    trackingNumber,
+    deliveryDate} = generateOrderDetails()
+      addOrderInfo({...shippingInfo, orderId, trackingNumber, deliveryDate} )
       router.push('/checkout/success');
     }
   };
@@ -203,10 +197,11 @@ export default function CheckoutPage() {
                     <Input
                       label="Phone Number"
                       type="tel"
-                      value={shippingInfo.phone}
+                      value={shippingInfo.phone.slice(0,10)}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo(prev => ({ ...prev, phone: e.target.value }))}
                       error={errors.phone}
                       required
+
                     />
                   </div>
                   
@@ -235,7 +230,7 @@ export default function CheckoutPage() {
                     />
                     <Input
                       label="ZIP Code"
-                      value={shippingInfo.zipCode}
+                      value={shippingInfo.zipCode.slice(0,6)}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setShippingInfo(prev => ({ ...prev, zipCode: e.target.value }))}
                       error={errors.zipCode}
                       required
@@ -294,7 +289,7 @@ export default function CheckoutPage() {
                     />
                     <Input
                       label="CVV"
-                      value={paymentInfo.cvv}
+                      value={paymentInfo.cvv.slice(0,3)}
                       onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPaymentInfo(prev => ({ ...prev, cvv: e.target.value }))}
                       error={errors.cvv}
                       placeholder="123"

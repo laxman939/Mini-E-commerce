@@ -30,7 +30,7 @@ export interface Product {
 }
 
 // src/types/cart.ts
-export interface CartItem {
+export interface CartItemType {
   id: string;
   name: string;
   price: number;
@@ -41,10 +41,27 @@ export interface CartItem {
     name: string;
     value: string;
   };
+  images: string[];
+  thumbnail: string;
 }
 
 export interface Cart {
-  items: CartItem[];
+  items: CartItemType[];
   discount: number;
   promoCode?: string;
+}
+
+export interface ShippingInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
+  orderId?: string | number;
+  trackingNumber?: string | number,
+  deliveryDate?:  string
 }

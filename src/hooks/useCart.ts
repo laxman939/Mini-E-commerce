@@ -1,14 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../store/store';
-import { addToCart, removeFromCart, clearCart,updateQuantity} from '@/store/slices/cartSlice';
-import { Product } from '@/types/product';
+import { addToCart, removeFromCart, clearCart,updateQuantity, setOrderInfo, emptyOrderInfo} from '@/store/slices/cartSlice';
+import { Product, ShippingInfo } from '@/types/product';
 
 
 export const useCart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state: RootState) => state.cart);
 
-  const addItem = (product: Product,quantity: number = 1) => {
+  const addItemCart = (product: Product,quantity: number = 1) => {
     dispatch(addToCart({ product, quantity }));
   };
 
@@ -32,13 +32,23 @@ export const useCart = () => {
     return cart.items.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const addOrderInfo = (obj: ShippingInfo) => {
+     dispatch(setOrderInfo(obj));
+  }
+
+  const clearOrderInfo = () => {
+    dispatch(emptyOrderInfo);
+  }
+
   return {
     cart,
-    addItem,
+    addItemCart,
     removeItem,
     updateItemQuantity,
     clearCartItems,
     getCartTotal,
     getCartItemsCount,
+    addOrderInfo,
+    clearOrderInfo,
   };
 };

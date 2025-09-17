@@ -1,24 +1,12 @@
-
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 import { Product } from '@/types/product';
 
-// Mock product data for demonstration
-// const mockProduct = {
-//   title: "Sample Product",
-//   images: [
-//     "https://picsum.photos/300/192?random=1",
-//     "https://picsum.photos/300/192?random=2",
-//     "https://picsum.photos/300/192?random=3",
-//     "https://picsum.photos/300/192?random=4"
-//   ],
-//   thumbnail: "https://picsum.photos/300/192?random=5"
-// };
-
 const ProductImageCarousel = ({ product  }: { product: Product }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   
   // Get all available images
   const allImages = product.images && product.images.length > 0 
@@ -27,7 +15,7 @@ const ProductImageCarousel = ({ product  }: { product: Product }) => {
 
   // Auto-advance images every 6 seconds
   useEffect(() => {
-    if (allImages.length > 1) {
+    if (allImages.length > 1 && !isPaused) {
       const interval = setInterval(() => {
         setCurrentIndex((prev) => (prev + 1) % allImages.length);
       },6000);
@@ -70,7 +58,10 @@ const ProductImageCarousel = ({ product  }: { product: Product }) => {
   }
 
   return (
-    <div className="relative h-48 bg-gray-200 overflow-hidden group">
+    <div className="relative h-48 bg-gray-200 overflow-hidden group"
+     onMouseEnter={() => setIsPaused(true)}
+  onMouseLeave={() => setIsPaused(false)}
+    >
       {/* Image Container */}
       <div className="relative w-full h-full">
         {allImages.map((image, index) => (

@@ -4,7 +4,7 @@ import Link from 'next/link';
 export const Footer: React.FC = () => {
   return (
     <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
@@ -87,7 +87,7 @@ export const Footer: React.FC = () => {
               name="email"
                 type="email"
                 placeholder="Your email"
-                className="max-w-40 px-2 py-1 bg-gray-800 text-white rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="max-w-40 px-2 py-1 mb-1 bg-gray-800 text-white rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button className="px-2 py-1 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 Subscribe
@@ -96,8 +96,8 @@ export const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center">
-          <p className="text-gray-300">
+        <div className="border-t border-gray-800 mt-4 pt-4 text-center">
+          <p className="text-gray-300 text-sm mb-0 pb-0">
             © 2025 ShopEase. All rights reserved.
           </p>
         </div>

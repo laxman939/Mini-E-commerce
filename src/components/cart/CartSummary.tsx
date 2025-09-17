@@ -12,7 +12,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ showCheckoutButton = t
   const { cart, getCartTotal, getCartItemsCount } = useCart();
 
   const subtotal = getCartTotal();
-  const shipping = subtotal > 50 ? 0 : 9.99; // Free shipping over $50
+  const shipping = subtotal > 500 ? 0 : 9.99; // Free shipping over $50
   const tax = subtotal * 0.08; // 8% tax
   const total = subtotal + shipping + tax;
   const discount = cart.discount || 0;
@@ -27,7 +27,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ showCheckoutButton = t
           <span className="text-gray-600">
             Items ({getCartItemsCount()})
           </span>
-          <span className="font-medium">${subtotal.toFixed(2)}</span>
+          <span className="font-medium">₹{subtotal.toFixed(2)}</span>
         </div>
 
         <div className="flex justify-between text-sm">
@@ -39,21 +39,21 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ showCheckoutButton = t
 
         <div className="flex justify-between text-sm">
           <span className="text-gray-600">Tax</span>
-          <span className="font-medium">${tax.toFixed(2)}</span>
+          <span className="font-medium">₹{tax.toFixed(2)}</span>
         </div>
 
         {discount > 0 && (
           <div className="flex justify-between text-sm">
             <span className="text-green-600">Discount</span>
             <span className="font-medium text-green-600">
-              -${discount.toFixed(2)}
+              -₹{discount.toFixed(2)}
             </span>
           </div>
         )}
 
-        {subtotal < 50 && (
+        {subtotal < 500 && (
           <div className="text-sm text-blue-600 bg-blue-50 p-3 rounded-md">
-            Add ${(50 - subtotal).toFixed(2)} more for free shipping!
+            Add ₹{(500 - subtotal).toFixed(2)} more for free shipping!
           </div>
         )}
 
@@ -61,7 +61,7 @@ export const CartSummary: React.FC<CartSummaryProps> = ({ showCheckoutButton = t
           <div className="flex justify-between">
             <span className="text-base font-semibold text-gray-900">Total</span>
             <span className="text-xl font-bold text-gray-900">
-              ${finalTotal.toFixed(2)}
+              ₹{finalTotal.toFixed(2)}
             </span>
           </div>
         </div>

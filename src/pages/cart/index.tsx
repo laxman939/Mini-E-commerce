@@ -3,13 +3,14 @@
 import React from 'react';
 import Link from 'next/link';
 import { useCart } from '@/hooks/useCart';
-import { CartItem } from '@/components/cart/CartItem';
 import { CartSummary } from '@/components/cart/CartSummary';
 import { PromoCodeForm } from '@/components/cart/PromoCodeForm';
+import { CartItemType } from '@/types/product';
+import { CartItem } from '@/components/cart/CartItem';
 
 export default function CartPage() {
   const { cart, clearCartItems, getCartItemsCount } = useCart();
-
+console.log(cart, "cart list")
   if (cart.items.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 py-12">
@@ -63,7 +64,7 @@ export default function CartPage() {
               </div>
               
               <div className="divide-y divide-gray-200">
-                {cart.items.map((item: any) => (
+                {cart.items.map((item: CartItemType) => (
                   <CartItem key={`${item.id}-${item.selectedVariant?.name || ''}`} item={item} />
                 ))}
               </div>

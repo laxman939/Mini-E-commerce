@@ -3,17 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { categories } from '@/lib/constants';
 
-const categories = [
-  'Electronics',
-  'Fashion',
-  'Home & Garden',
-  'Sports',
-  'Books',
-  'Beauty',
-  'Toys',
-  'Automotive'
-];
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +41,7 @@ export const Navbar: React.FC = () => {
                     <button
                       key={category}
                       onClick={() => handleCategoryClick(category)}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 first-letter:uppercase"
                     >
                       {category}
                     </button>

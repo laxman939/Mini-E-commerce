@@ -6,33 +6,14 @@ import { RootState } from '../../store/store';
 import {
   setCategory,
   setPriceRange,
-  setBrands,
   addBrand,
   removeBrand,
   setRating,
   setInStock,
   resetFilters,
 } from '../../store/slices/filtersSlice';
-
-const categories = [
-  'Electronics',
-  'Fashion',
-  'Home & Garden',
-  'Sports',
-  'Books',
-  'Beauty',
-  'Toys',
-  'Automotive'
-];
-
-const brands = [
-  'TechBrand',
-  'FitTech',
-  'EcoWear',
-  'HydroLife',
-  'ZenFit',
-  'BrightLight'
-];
+import { brands, categories } from '@/lib/constants'
+import Link from 'next/link';
 
 export const ProductFilters: React.FC = () => {
   const dispatch = useDispatch();
@@ -79,7 +60,9 @@ export const ProductFilters: React.FC = () => {
           <h3 className="text-sm font-medium text-gray-900 mb-3">Category</h3>
           <div className="space-y-2">
             {categories.map((category) => (
-              <label key={category} className="flex items-center">
+              <Link  key={category}  href={`/products?category=${encodeURIComponent(category)}`}>
+              <label className="flex items-center my-2"
+              >
                 <input
                   type="radio"
                   name="category"
@@ -87,8 +70,9 @@ export const ProductFilters: React.FC = () => {
                   onChange={() => handleCategoryChange(category)}
                   className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
                 />
-                <span className="ml-2 text-sm text-gray-700">{category}</span>
+                <span className="ml-2 text-sm text-gray-700 first-letter:uppercase">{category}</span>
               </label>
+              </Link>
             ))}
           </div>
         </div>
@@ -102,7 +86,7 @@ export const ProductFilters: React.FC = () => {
               <input
                 type="number"
                 value={filters.priceRange.min}
-                onChange={(e) => handlePriceChange('min', parseInt(e.target.value) || 0)}
+                onChange={(e) => handlePriceChange('min', parseInt(e.target.value) )}
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 min="0"
               />
@@ -112,13 +96,13 @@ export const ProductFilters: React.FC = () => {
               <input
                 type="number"
                 value={filters.priceRange.max}
-                onChange={(e) => handlePriceChange('max', parseInt(e.target.value) || 1000)}
+                onChange={(e) => handlePriceChange('max', parseInt(e.target.value))}
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                 min="0"
               />
             </div>
             <div className="text-xs text-gray-500">
-              ${filters.priceRange.min} - ${filters.priceRange.max}
+              ₹{filters.priceRange.min} - ₹{filters.priceRange.max}
             </div>
           </div>
         </div>
@@ -183,7 +167,7 @@ export const ProductFilters: React.FC = () => {
               onChange={(e) => dispatch(setInStock(e.target.checked))}
               className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
             />
-            <span className="ml-2 text-sm text-gray-700">In Stock Only</span>
+            <span className="ml-2 text-sm text-gray-700">Out of Stock Only</span>
           </label>
         </div>
       </div>

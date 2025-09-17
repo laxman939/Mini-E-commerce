@@ -10,6 +10,8 @@ import { useCart } from '@/hooks/useCart';
 import { useWishlist } from '@/hooks/useWishList';
 import { Product } from '@/types/product';
 import { Header } from '@/components/layout/Header';
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
+import RenderStars from '@/components/ui/RenderStar';
 
 
 export default function ProductDetailPage() {
@@ -23,22 +25,22 @@ export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
 
-  const { addItem } = useCart();
+  const { addItemCart } = useCart();
   const { addItem: addToWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
     const loadProduct = async () => {
       try{
         setLoading(true);
-
         fetch(`https://dummyjson.com/products/${productId}`).then(res => res.json()).then(data => {
         console.log(data, "data", "data");
            if (data) {
-        setProduct(data)
-      }
-    })
+            setProduct(data)
+           }
+          })
       }catch(err){
         console.log(err);
+        setProduct(null);
       }finally{
         setLoading(false);
       }
@@ -52,43 +54,6 @@ export default function ProductDetailPage() {
     }
   }, [productId]);
 
-  // const handleVariantChange = (variantName: string, value: string) => {
-  //   setSelectedVariants(prev => ({
-  //     ...prev,
-  //     [variantName]: value
-  //   }));
-  // };
-
-  const handleAddToCart = () => {
-    if (product) {
-      // const selectedVariant = Object.keys(selectedVariants).length > 0 
-      //   ? { name: Object.keys(selectedVariants)[0], value: Object.values(selectedVariants)[0] }
-      //   : undefined;
-      
-      addItem(product, quantity);
-    }
-  };
-
-  const handleAddToWishlist = () => {
-    if (product) {
-      addToWishlist(product);
-    }
-  };
-
-  const renderStars = (rating: number) => {
-    return Array.from({ length: 5 }, (_, index) => (
-      <svg
-        key={index}
-        className={`w-5 h-5 ${
-          index < Math.floor(rating) ? 'text-yellow-400' : 'text-gray-300'
-        }`}
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-      </svg>
-    ));
-  };
 
   if (loading) {
     return (
@@ -107,23 +72,12 @@ export default function ProductDetailPage() {
     );
   }
 
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-          <Link href="/products" className="text-blue-600 hover:text-blue-800">
-            Browse all products
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
     <Header/>
-    <div className="min-h-screen bg-gray-50 py-8">
+    {
+       product ?
+       <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="flex mb-8" aria-label="Breadcrumb">
@@ -206,7 +160,7 @@ export default function ProductDetailPage() {
             {/* Rating */}
             <div className="flex items-center space-x-4">
               <div className="flex items-center">
-                {renderStars(product.rating || 0)}
+               <RenderStars rating={product.rating} />
                 <span className="ml-2 text-sm text-gray-600">
                   {product.rating} out of 5
                 </span>
@@ -233,30 +187,6 @@ export default function ProductDetailPage() {
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
               <p className="text-gray-600 leading-relaxed">{product.description}</p>
             </div>
-
-            {/* Variants */}
-            {/* {product.variants && product.variants.map((variant) => (
-              <div key={variant.name}>
-                <label className="block text-sm font-medium text-gray-900 mb-2">
-                  {variant.name}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {variant.options.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => handleVariantChange(variant.name, option)}
-                      className={`px-4 py-2 text-sm font-medium rounded-md border ${
-                        selectedVariants[variant.name] === option
-                          ? 'bg-blue-600 text-white border-blue-600'
-                          : 'bg-white text-gray-900 border-gray-300 hover:bg-gray-50'
-                      }`}
-                    >
-                      {option}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            ))} */}
 
             {/* Quantity */}
             <div>
@@ -297,7 +227,7 @@ export default function ProductDetailPage() {
             {/* Action Buttons */}
             <div className="space-y-4">
               <button
-                onClick={handleAddToCart}
+                onClick={() => addItemCart(product, quantity)}
                 disabled={!(product.availabilityStatus === "In Stock")}
                 className="w-full bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -305,7 +235,7 @@ export default function ProductDetailPage() {
               </button>
               
               <button
-                onClick={handleAddToWishlist}
+                onClick={() => addToWishlist(product)}
                 className={`w-full py-3 px-6 rounded-md font-medium border transition-colors ${
                   isInWishlist((product.id).toString())
                     ? 'bg-red-50 border-red-300 text-red-700 hover:bg-red-100'
@@ -343,6 +273,24 @@ export default function ProductDetailPage() {
         </div>
       </div>
     </div>
+    : 
+      <div className="min-h-screen bg-gray-50 py-8">
+        {
+          // loading ? 
+          <div  className='flex items-center justify-center'>
+            <LoadingSpinner/> 
+          </div>
+          // :
+        // <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        //   <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
+        //   <Link href="/products" className="text-blue-600 hover:text-blue-800">
+        //     Browse all products
+        //   </Link>
+        // </div>
+        }
+      </div>
+    }
+   
     </>
   );
 }

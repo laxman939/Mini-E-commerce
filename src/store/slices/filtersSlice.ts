@@ -63,7 +63,7 @@ const filtersSlice = createSlice({
     setSearchQuery: (state, action: PayloadAction<string>) => {
       state.searchQuery = action.payload;
     },
-    resetFilters: (state) => {
+    resetFilters: () => {
       return initialState;
     },
   },
