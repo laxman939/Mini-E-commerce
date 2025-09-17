@@ -1,40 +1,143 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 🛍️ Mini E-Commerce Frontend
 
-## Getting Started
+A simplified yet real-world e-commerce web application built with **Next.js, React, Tailwind CSS, and Redux Toolkit**.  
+This project demonstrates modern frontend practices such as component-driven architecture, state management, and responsive design.
 
-First, run the development server:
+---
+
+## 🚀 Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org/) (React 18, App Router, SSR/CSR)
+- **State Management:** [Redux Toolkit](https://redux-toolkit.js.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)  
+- **Data Fetching:** Native Fetch API + [DummyJSON](https://dummyjson.com/products)  
+- **Persistence:** LocalStorage (cart & wishlist)
+- **Build & Deploy:** Vercel / Netlify  
+- **Version Control:** Git & GitHub
+
+---
+
+## 📌 Features
+
+### 🏠 Home Page
+- Hero banner (static / carousel)  
+- Featured categories grid  
+- Trending products section  
+
+### 📃 Product Listing Page (PLP)
+- Filters → Category, Brand, Price Range, Rating  
+- Sorting → Relevance, Price (Low → High), Newest  
+- Infinite scroll / pagination  
+- Search bar with debounce  
+
+### 📦 Product Detail Page (PDP)
+- Image carousel (3+ images)  
+- Variant & quantity selectors  
+- Add to cart / wishlist  
+- Similar products carousel  
+
+### 🛒 Cart Page
+- Product summary with quantity controls  
+- Remove item option  
+- Apply promo code (dummy logic)  
+- Price breakdown (MRP, discount, tax, total)  
+- Sticky mobile checkout bar  
+
+### ✅ Checkout Modal (Optional)
+- Dummy form (Name, Email, Address, etc.)  
+- Success message after submission  
+
+---
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+├── components/       # Reusable UI & Product components
+├── pages/            # Next.js pages (Home, Products, PDP, Cart)
+├── store/            # Redux slices (products, filters, cart)
+├── hooks/            # Custom hooks (useDebounce, etc.)
+├── styles/           # Tailwind CSS config
+├── types/            # TypeScript interfaces (Product, Cart, etc.)
+└── public/           # Static assets
+# 🛍️ Mini E-Commerce Frontend
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+A simplified yet real-world e-commerce web application built with **Next.js, React, Tailwind CSS, and Redux Toolkit**.  
+This project demonstrates modern frontend practices such as component-driven architecture, state management, and responsive design.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+---
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 🚀 Tech Stack
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+- **Framework:** [Next.js](https://nextjs.org/) (React 18, App Router, SSR/CSR)
+- **State Management:** [Redux Toolkit](https://redux-toolkit.js.org/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)  
+- **Data Fetching:** Native Fetch API + [DummyJSON](https://dummyjson.com/products)  
+- **Persistence:** LocalStorage (cart & wishlist)
+- **Build & Deploy:** Vercel / Netlify  
+- **Version Control:** Git & GitHub
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📌 Features
 
-To learn more about Next.js, take a look at the following resources:
+### 🏠 Home Page
+- Hero banner (static / carousel)  
+- Featured categories grid  
+- Trending products section  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+### 📃 Product Listing Page (PLP)
+- Filters → Category, Brand, Price Range, Rating  
+- Sorting → Relevance, Price (Low → High), Newest  
+- Infinite scroll  
+- Search bar with debounce  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 📦 Product Detail Page (PDP)
+- Image carousel (3+ images)  
+- Quantity selectors  
+- Add to cart / wishlist  
+- Similar products carousel  
 
-## Deploy on Vercel
+### 🛒 Cart Page
+- Product summary with quantity controls  
+- Remove item option  
+- Apply promo code (dummy logic)  
+- Price breakdown (MRP, discount, tax, total)  
+- Sticky mobile checkout bar  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### ❤️ Wishlist Page
+- Save products for later  
+- Move items from wishlist to cart  
+- Remove items easily  
+- Persistent storage with LocalStorage  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### ✅ Checkout Page (Optional)
+- Dummy form (Name, Email, Address, etc.)  
+- Success message after submission  
+
+---
+
+## 📂 Project Structure
+
+```bash
+├── components/       # Reusable UI & Product components
+├── pages/            # Next.js pages (Home, Products, PDP, Cart)
+├── store/            # Redux slices (products, filters, cart)
+├── hooks/            # Custom hooks (useDebounce, etc.)
+├── styles/           # Tailwind CSS config
+├── types/            # TypeScript interfaces (Product, Cart, etc.)
+└── public/           # Static assets
+
+
+
+🎨 Design Choices
+
+Component-driven architecture → Highly reusable ProductCard, Filters, Header, WishlistItem etc.
+Responsive-first → Mobile-first layouts with Tailwind CSS.
+Performance → Debounced search, infinite scroll, and memoized components.
+Scalability → Redux Toolkit for predictable state management.
+
+
+👨‍💻 Author
+
+Laxman Aavuladoddi
+Frontend Developer | React & Next.js Enthusiast 🚀
