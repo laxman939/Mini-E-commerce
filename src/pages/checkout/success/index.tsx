@@ -59,19 +59,25 @@ const Confetti: React.FC<ConfettiProps> = ({
   });
 
   // Handle window resize
-  useEffect(() => {
-    const handleResize = (): void => {
-      setWindowDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
+useEffect(() => {
+  const handleResize = (): void => {
+    setWindowDimensions({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+  };
 
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", handleResize);
+  }
+
+  return () => {
     if (typeof window !== "undefined") {
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+      window.removeEventListener("resize", handleResize);
     }
-  }, []);
+  };
+}, []);
+
 
   // Create particles
   const createParticles = useCallback((): Particle[] => {
