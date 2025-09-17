@@ -102,7 +102,7 @@ This project demonstrates modern frontend practices such as component-driven arc
 - Remove item option  
 - Apply promo code (dummy logic)  
 - Price breakdown (MRP, discount, tax, total)  
-- Sticky mobile checkout bar  
+- Sticky mobile checkout bar 
 
 ### ❤️ Wishlist Page
 - Save products for later  
@@ -128,8 +128,10 @@ Scalability → Redux Toolkit for predictable state management.
 
 ## 🔗 Demo & Repository
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-blue?style=for-the-badge&logo=vercel)](https://mini-e-commerce-fe.vercel.app/)
-[![GitHub Repo](https://img.shields.io/badge/GitHub-Repo-black?style=for-the-badge&logo=github)](https://github.com/laxman939/Mini-E-commerce)
+🚀 **Live Demo:** [mini-e-commerce-fe.vercel.app](https://mini-e-commerce-fe.vercel.app/)  
+💻 **GitHub Repo:** [github.com/laxman939/Mini-E-commerce](https://github.com/laxman939/Mini-E-commerce)
+
+---
 
 
 
