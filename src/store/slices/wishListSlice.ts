@@ -1,4 +1,4 @@
-import { Product } from '@/components/product/ProductGrid';
+import { Product } from '@/types/product';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface WishlistState {
